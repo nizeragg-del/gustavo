@@ -44,19 +44,36 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
     };
 
     const verifyAdmin = async (authUser: any) => {
-        const { data: profile } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', authUser.id)
-            .single();
+        try {
+            console.log("Verificando admin p/ UID:", authUser.id);
+            const { data: profile, error } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', authUser.id)
+                .single();
 
-        if (profile?.role === 'admin') {
-            setUser(authUser);
-        } else if (profile) {
-            setAuthError('Você não tem permissão de administrador.');
-            await supabase.auth.signOut();
+            if (error) {
+                console.error("Erro ao buscar perfil:", error);
+                setAuthError(`Erro de permissão: ${error.message}`);
+                await supabase.auth.signOut();
+                setLoading(false);
+                return;
+            }
+
+            console.log("Perfil encontrado:", profile);
+
+            if (profile?.role === 'admin') {
+                setUser(authUser);
+            } else {
+                setAuthError('Sua conta não possui privilégios de administrador.');
+                await supabase.auth.signOut();
+            }
+        } catch (err) {
+            console.error("Erro inesperado no login:", err);
+            setAuthError('Ocorreu um erro inesperado ao verificar suas permissões.');
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     const handleLogin = async (e: React.FormEvent) => {
