@@ -45,32 +45,50 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
 
     const verifyAdmin = async (authUser: any) => {
         try {
-            console.log("Verificando admin p/ UID:", authUser.id);
+            console.log("Verificando admin p/ UID:", authUser.id, authUser.email);
+            setAuthError(null);
+
+            // Tenta buscar por ID (UUID)
             const { data: profile, error } = await supabase
                 .from('profiles')
-                .select('role')
+                .select('role, email')
                 .eq('id', authUser.id)
                 .single();
 
             if (error) {
-                console.error("Erro ao buscar perfil:", error);
-                setAuthError(`Erro de permissão: ${error.message}`);
-                await supabase.auth.signOut();
-                setLoading(false);
-                return;
-            }
+                console.warn("Nenhum perfil encontrado por ID, tentando por email...", error.message);
+                // Fallback por email caso o ID no banco esteja diferente
+                const { data: profileByEmail, error: emailError } = await supabase
+                    .from('profiles')
+                    .select('role, id')
+                    .eq('email', authUser.email)
+                    .single();
 
-            console.log("Perfil encontrado:", profile);
+                if (emailError) {
+                    console.error("Erro final ao buscar perfil:", emailError);
+                    setAuthError(`Usuário não encontrado na tabela de permissões. (${emailError.message})`);
+                    await supabase.auth.signOut();
+                    setLoading(false);
+                    return;
+                }
 
-            if (profile?.role === 'admin') {
+                if (profileByEmail?.role === 'admin') {
+                    console.log("Admin validado por email!");
+                    setUser(authUser);
+                } else {
+                    setAuthError('Acesso negado: Perfil sem permissão de administrador.');
+                    await supabase.auth.signOut();
+                }
+            } else if (profile?.role === 'admin') {
+                console.log("Admin validado por ID!");
                 setUser(authUser);
             } else {
-                setAuthError('Sua conta não possui privilégios de administrador.');
+                setAuthError('Acesso negado: ID de usuário não possui cargo administrativo.');
                 await supabase.auth.signOut();
             }
-        } catch (err) {
-            console.error("Erro inesperado no login:", err);
-            setAuthError('Ocorreu um erro inesperado ao verificar suas permissões.');
+        } catch (err: any) {
+            console.error("Erro fatal no login:", err);
+            setAuthError(`Erro interno: ${err.message || 'Erro desconhecido'}`);
         } finally {
             setLoading(false);
         }
