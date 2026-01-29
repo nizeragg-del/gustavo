@@ -185,24 +185,31 @@ const Cart: React.FC<CartProps> = ({ cart, setCurrentPage, isLoggedIn, onFinaliz
                         {/* Shipping Options List */}
                         {shippingOptions.length > 0 && (
                             <div className="mt-4 space-y-2">
-                                {shippingOptions.map((opt: any) => (
-                                    <label key={opt.id} className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${Number(opt.price) === shippingCost ? 'bg-primary/10 border-primary' : 'bg-background-dark/50 border-white/10 hover:border-white/30'}`}>
-                                        <div className="flex items-center gap-3">
-                                            <input
-                                                type="radio"
-                                                name="shipping"
-                                                checked={Number(opt.price) === shippingCost}
-                                                onChange={() => setShippingCost(Number(opt.price))}
-                                                className="accent-primary"
-                                            />
-                                            <div>
-                                                <p className="font-bold text-sm text-white">{opt.name}</p>
-                                                <p className="text-xs text-slate-400">Chega em até {opt.delivery_time} dias</p>
+                                {shippingOptions.map((opt: any) => {
+                                    // Map Sandbox names to Real names
+                                    let displayName = opt.name;
+                                    if (displayName === '.Package') displayName = 'PAC (Econômico)';
+                                    if (displayName === '.Com') displayName = 'SEDEX (Expresso)';
+
+                                    return (
+                                        <label key={opt.id} className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${Number(opt.price) === shippingCost ? 'bg-primary/10 border-primary' : 'bg-background-dark/50 border-white/10 hover:border-white/30'}`}>
+                                            <div className="flex items-center gap-3">
+                                                <input
+                                                    type="radio"
+                                                    name="shipping"
+                                                    checked={Number(opt.price) === shippingCost}
+                                                    onChange={() => setShippingCost(Number(opt.price))}
+                                                    className="accent-primary"
+                                                />
+                                                <div>
+                                                    <p className="font-bold text-sm text-white">{displayName}</p>
+                                                    <p className="text-xs text-slate-400">Chega em até {opt.delivery_time} dias</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <span className="font-bold text-primary">R$ {Number(opt.price).toFixed(2)}</span>
-                                    </label>
-                                ))}
+                                            <span className="font-bold text-primary">R$ {Number(opt.price).toFixed(2)}</span>
+                                        </label>
+                                    )
+                                })}
                             </div>
                         )}
 
