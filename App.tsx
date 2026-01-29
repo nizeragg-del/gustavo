@@ -273,6 +273,7 @@ const App: React.FC = () => {
         setCurrentPage={setCurrentPage}
         cartCount={cart.reduce((a, b) => a + b.quantity, 0)}
         onCategorySelect={handleCategoryNav}
+        onProfileClick={handleProfileClick}
       />
       <main className="flex-grow">
         {renderPage()}
