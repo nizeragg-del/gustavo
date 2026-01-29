@@ -37,8 +37,8 @@ const App: React.FC = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const { data: productsData } = await supabase.from('products').select('*');
-      const { data: ordersData } = await supabase.from('orders').select('*, order_items(*)');
+      const { data: productsData } = await supabase.from('arena_products').select('*');
+      const { data: ordersData } = await supabase.from('arena_orders').select('*, arena_order_items(*)');
 
       if (productsData) {
         setProducts(productsData.map(p => ({
@@ -123,7 +123,7 @@ const App: React.FC = () => {
   // Admin Actions
   const handleAddProduct = async (newProduct: Product) => {
     try {
-      const { data, error } = await supabase.from('products').insert({
+      const { data, error } = await supabase.from('arena_products').insert({
         name: newProduct.name,
         brand: newProduct.brand,
         price: newProduct.price,
@@ -187,7 +187,7 @@ const App: React.FC = () => {
 
       // 1. Create Order
       const { data: order, error: orderError } = await supabase
-        .from('orders')
+        .from('arena_orders')
         .insert({
           total_amount: subtotal,
           status: 'pending'
@@ -206,11 +206,11 @@ const App: React.FC = () => {
         size: item.size
       }));
 
-      const { error: itemsError } = await supabase.from('order_items').insert(orderItems);
+      const { error: itemsError } = await supabase.from('arena_order_items').insert(orderItems);
       if (itemsError) throw itemsError;
 
       // 3. Log Activity
-      await supabase.from('admin_activities').insert({
+      await supabase.from('arena_activities').insert({
         icon: 'shopping_cart',
         title: `Novo pedido #${order.id.slice(0, 5)}`,
         subtitle: `por ${user.email}`,

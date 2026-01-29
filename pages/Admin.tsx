@@ -50,7 +50,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
 
             // Tenta buscar por ID (UUID)
             const { data: profile, error } = await supabase
-                .from('profiles')
+                .from('arena_profiles')
                 .select('role, email')
                 .eq('id', authUser.id)
                 .single();
@@ -59,7 +59,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
                 console.warn("Nenhum perfil encontrado por ID, tentando por email...", error.message);
                 // Fallback por email caso o ID no banco esteja diferente
                 const { data: profileByEmail, error: emailError } = await supabase
-                    .from('profiles')
+                    .from('arena_profiles')
                     .select('role, id')
                     .eq('email', authUser.email)
                     .single();
@@ -120,7 +120,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
 
     React.useEffect(() => {
         const fetchClients = async () => {
-            const { data } = await supabase.from('profiles').select('*');
+            const { data } = await supabase.from('arena_profiles').select('*');
             if (data) {
                 setClients(data.map((p, i) => ({
                     id: i + 1,
@@ -139,7 +139,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
 
     React.useEffect(() => {
         const fetchActivities = async () => {
-            const { data } = await supabase.from('admin_activities').select('*').order('created_at', { ascending: false }).limit(5);
+            const { data } = await supabase.from('arena_activities').select('*').order('created_at', { ascending: false }).limit(5);
             if (data) setActivities(data);
         };
         fetchActivities();
