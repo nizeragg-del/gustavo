@@ -110,6 +110,16 @@ const App: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
+  const handleProfileClick = () => {
+    if (user) {
+      setCurrentPage('PROFILE');
+    } else {
+      setAuthError(null);
+      setIsSignUp(false);
+      setShowAuthPopup(true);
+    }
+  };
+
   // Admin Actions
   const handleAddProduct = async (newProduct: Product) => {
     try {
