@@ -25,7 +25,7 @@ export default async function handler(req, res) {
             throw new Error('Token de frete não configurado no servidor.');
         }
 
-        const response = await fetch('https://www.melhorenvio.com.br/api/v2/me/shipment/calculate', {
+        const response = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
