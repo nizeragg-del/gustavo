@@ -292,57 +292,77 @@ const App: React.FC = () => {
 
       {/* Auth Popup */}
       {showAuthPopup && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background-dark/80 backdrop-blur-sm p-4">
-          <div className="bg-white/10 border border-white/10 rounded-2xl p-8 max-w-md w-full animate-scale-in">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-black uppercase text-primary">{isSignUp ? 'Criar Conta' : 'Login / Cadastro'}</h2>
-              <button onClick={() => { setShowAuthPopup(false); setAuthError(null); }} className="text-white/60 hover:text-white">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background-dark/40 backdrop-blur-xl p-4 animate-fade-in">
+          <div
+            className="fixed inset-0 cursor-pointer"
+            onClick={() => { setShowAuthPopup(false); setAuthError(null); }}
+          ></div>
+          <div className="relative bg-[#112218]/90 border border-[#326747] rounded-3xl p-10 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] animate-scale-in">
+            <div className="flex justify-between items-center mb-8">
+              <div className="flex flex-col">
+                <h2 className="text-3xl font-black uppercase text-white tracking-tighter italic">
+                  {isSignUp ? 'Criar Conta' : 'Área do Sócio'}
+                </h2>
+                <div className="h-1 w-12 bg-primary mt-1"></div>
+              </div>
+              <button
+                onClick={() => { setShowAuthPopup(false); setAuthError(null); }}
+                className="size-10 flex items-center justify-center rounded-full bg-white/5 text-white/60 hover:text-white hover:bg-white/10 transition-all"
+              >
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            <p className="text-slate-400 mb-8">
-              {isSignUp ? 'Preencha os dados abaixo para se cadastrar.' : 'Para finalizar seu pedido, por favor faça login ou crie uma conta.'}
+
+            <p className="text-[#92c9a8] mb-10 text-sm font-medium leading-relaxed">
+              {isSignUp
+                ? 'Junte-se à Arena Golaço e tenha acesso a lançamentos exclusivos e promoções.'
+                : 'Acesse sua conta para gerenciar seus pedidos e salvar seus itens favoritos.'}
             </p>
 
-            <form className="space-y-4" onSubmit={handleAuth}>
-              <div>
-                <label className="block text-xs font-bold uppercase text-slate-500 mb-2">E-mail</label>
+            <form className="space-y-6" onSubmit={handleAuth}>
+              <div className="space-y-2">
+                <label className="block text-[10px] font-black uppercase tracking-widest text-primary ml-1 text-left">E-mail</label>
                 <input
                   type="email"
                   required
                   value={authEmail}
                   onChange={e => setAuthEmail(e.target.value)}
-                  className="w-full bg-background-dark/50 border border-white/10 rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary outline-none text-white"
-                  placeholder="seu@email.com"
+                  className="w-full bg-[#234832]/30 border border-[#326747] rounded-xl px-5 py-4 text-white focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all placeholder:text-white/20"
+                  placeholder="ex: artilheiro@gol.com"
                 />
               </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Senha</label>
+              <div className="space-y-2">
+                <label className="block text-[10px] font-black uppercase tracking-widest text-primary ml-1 text-left">Senha</label>
                 <input
                   type="password"
                   required
                   value={authPassword}
                   onChange={e => setAuthPassword(e.target.value)}
-                  className="w-full bg-background-dark/50 border border-white/10 rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary outline-none text-white"
+                  className="w-full bg-[#234832]/30 border border-[#326747] rounded-xl px-5 py-4 text-white focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all placeholder:text-white/20"
                   placeholder="********"
                 />
               </div>
 
-              {authError && <p className="text-red-500 text-xs font-bold uppercase">{authError}</p>}
+              {authError && (
+                <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 p-3 rounded-lg">
+                  <span className="material-symbols-outlined text-red-500 text-sm">notifications_active</span>
+                  <p className="text-red-500 text-[10px] font-black uppercase leading-tight">{authError}</p>
+                </div>
+              )}
 
-              <button type="submit" className="w-full bg-primary hover:bg-primary/90 text-background-dark font-black py-4 rounded-lg transition-all uppercase tracking-tighter">
-                {isSignUp ? 'CADASTRAR' : 'ENTRAR'}
+              <button type="submit" className="w-full bg-primary hover:bg-primary/90 text-background-dark font-black py-5 rounded-2xl transition-all uppercase tracking-tighter shadow-[0_10px_20px_-10px_rgba(43,238,121,0.5)] active:scale-[0.98]">
+                {isSignUp ? 'FINALIZAR CADASTRO' : 'ENTRAR NA CONTA'}
               </button>
             </form>
 
-            <div className="mt-6 pt-6 border-t border-white/10 text-center">
-              <p className="text-sm text-slate-400">
-                {isSignUp ? 'Já tem uma conta?' : 'Não tem uma conta?'}
+            <div className="mt-10 pt-8 border-t border-[#326747]/50 text-center">
+              <p className="text-xs text-[#92c9a8] font-bold uppercase tracking-widest">
+                {isSignUp ? 'Já joga com a gente?' : 'Ainda não é do time?'}
                 <button
-                  onClick={() => setIsSignUp(!isSignUp)}
-                  className="text-primary font-bold hover:underline ml-1"
+                  onClick={() => { setIsSignUp(!isSignUp); setAuthError(null); }}
+                  className="text-white hover:text-primary transition-colors ml-2 underline underline-offset-4"
                 >
-                  {isSignUp ? 'Faça Login' : 'Cadastre-se'}
+                  {isSignUp ? 'FAÇA LOGIN' : 'CADASTRE-SE AGORA'}
                 </button>
               </p>
             </div>
