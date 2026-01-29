@@ -22,7 +22,6 @@ const Cart: React.FC<CartProps> = ({ cart, setCurrentPage, isLoggedIn, onFinaliz
 
         setLoadingShipping(true);
         try {
-            const token = import.meta.env.VITE_MELHOR_ENVIO_TOKEN;
             const fromCep = import.meta.env.VITE_FROM_CEP || '01001000'; // Default to SP if not set
 
             const products = cart.map(item => ({
@@ -35,12 +34,12 @@ const Cart: React.FC<CartProps> = ({ cart, setCurrentPage, isLoggedIn, onFinaliz
                 quantity: item.quantity
             }));
 
-            const response = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate', {
+            // Call our Vercel Function proxy instead of direct API
+            const response = await fetch('/api/shipping', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({
                     from: { postal_code: fromCep },
