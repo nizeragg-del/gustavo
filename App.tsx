@@ -48,7 +48,8 @@ const AppContent: React.FC = () => {
           brand: p.brand,
           price: Number(p.price),
           image: p.image_url,
-          category: 'Clubes',
+          category: p.category || 'Clubes',
+          subcategory: p.subcategory || 'Nacional',
           isNew: p.is_new,
           stock: p.stock_quantity
         })));
@@ -196,7 +197,8 @@ const AppContent: React.FC = () => {
         brand: newProduct.brand,
         price: newProduct.price,
         image_url: newProduct.image,
-        category_id: 1,
+        category: newProduct.category,
+        subcategory: newProduct.subcategory,
         is_new: true,
         stock_quantity: 100
       }).select().single();
@@ -211,6 +213,26 @@ const AppContent: React.FC = () => {
 
   const handleUpdateOrderStatus = (orderId: string, status: any) => {
     setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
+  };
+
+  const handleEditProduct = async (product: Product) => {
+    try {
+      const { error } = await supabase.from('arena_products').update({
+        name: product.name,
+        brand: product.brand,
+        price: product.price,
+        image_url: product.image,
+        category: product.category,
+        subcategory: product.subcategory,
+      }).eq('id', product.id);
+
+      if (error) throw error;
+      alert('Produto atualizado com sucesso!');
+      fetchData();
+    } catch (error: any) {
+      console.error('Error updating product:', error);
+      alert(`Erro ao atualizar produto: ${error.message}`);
+    }
   };
 
 
@@ -298,7 +320,7 @@ const AppContent: React.FC = () => {
         <Route path="contact" element={<Contact />} />
         <Route path="privacy" element={<Privacy />} />
       </Route>
-      <Route path="/admin" element={<Admin products={products} orders={orders} onAddProduct={handleAddProduct} onUpdateStatus={handleUpdateOrderStatus} onNavigateHome={() => navigate('/')} />} />
+      <Route path="/admin" element={<Admin products={products} orders={orders} onAddProduct={handleAddProduct} onEditProduct={handleEditProduct} onUpdateStatus={handleUpdateOrderStatus} onNavigateHome={() => navigate('/')} />} />
     </Routes>
   );
 };
