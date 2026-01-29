@@ -25,8 +25,12 @@ const App: React.FC = () => {
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const [showAuthPopup, setShowAuthPopup] = useState(false);
+  const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch data from Supabase
@@ -67,9 +71,21 @@ const App: React.FC = () => {
 
   React.useEffect(() => {
     fetchData();
+
+    // Auth Listener
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
     if (window.location.pathname === '/admin') {
       setCurrentPage('ADMIN');
     }
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleProductClick = (product: Product) => {
@@ -119,8 +135,33 @@ const App: React.FC = () => {
     setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
   };
 
+  // Admin Actions
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError(null);
+    try {
+      if (isSignUp) {
+        const { error } = await supabase.auth.signUp({
+          email: authEmail,
+          password: authPassword,
+          options: {
+            data: { full_name: authEmail.split('@')[0] }
+          }
+        });
+        if (error) throw error;
+        alert('Cadastro realizado! Se necessário, verifique seu e-mail.');
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email: authEmail, password: authPassword });
+        if (error) throw error;
+      }
+      setShowAuthPopup(false);
+    } catch (err: any) {
+      setAuthError(err.message || 'Erro na autenticação');
+    }
+  };
+
   const handleFinalizeOrder = async () => {
-    if (!isLoggedIn) {
+    if (!user) {
       setShowAuthPopup(true);
       return;
     }
@@ -156,7 +197,7 @@ const App: React.FC = () => {
       await supabase.from('admin_activities').insert({
         icon: 'shopping_cart',
         title: `Novo pedido #${order.id.slice(0, 5)}`,
-        subtitle: 'por Usuário Logado',
+        subtitle: `por ${user.email}`,
         color: 'text-primary',
         value_label: `R$ ${subtotal.toFixed(2)}`
       });
@@ -192,7 +233,7 @@ const App: React.FC = () => {
           <Cart
             cart={cart}
             setCurrentPage={setCurrentPage}
-            isLoggedIn={isLoggedIn}
+            isLoggedIn={!!user}
             onFinalize={handleFinalizeOrder}
           />
         );
@@ -237,29 +278,56 @@ const App: React.FC = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background-dark/80 backdrop-blur-sm p-4">
           <div className="bg-white/10 border border-white/10 rounded-2xl p-8 max-w-md w-full animate-scale-in">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-black uppercase text-primary">Login / Cadastro</h2>
-              <button onClick={() => setShowAuthPopup(false)} className="text-white/60 hover:text-white">
+              <h2 className="text-2xl font-black uppercase text-primary">{isSignUp ? 'Criar Conta' : 'Login / Cadastro'}</h2>
+              <button onClick={() => { setShowAuthPopup(false); setAuthError(null); }} className="text-white/60 hover:text-white">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            <p className="text-slate-400 mb-8">Para finalizar seu pedido, por favor faça login ou crie uma conta.</p>
+            <p className="text-slate-400 mb-8">
+              {isSignUp ? 'Preencha os dados abaixo para se cadastrar.' : 'Para finalizar seu pedido, por favor faça login ou crie uma conta.'}
+            </p>
 
-            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setIsLoggedIn(true); setShowAuthPopup(false); }}>
+            <form className="space-y-4" onSubmit={handleAuth}>
               <div>
                 <label className="block text-xs font-bold uppercase text-slate-500 mb-2">E-mail</label>
-                <input type="email" required className="w-full bg-background-dark/50 border border-white/10 rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary outline-none text-white" placeholder="seu@email.com" />
+                <input
+                  type="email"
+                  required
+                  value={authEmail}
+                  onChange={e => setAuthEmail(e.target.value)}
+                  className="w-full bg-background-dark/50 border border-white/10 rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary outline-none text-white"
+                  placeholder="seu@email.com"
+                />
               </div>
               <div>
                 <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Senha</label>
-                <input type="password" required className="w-full bg-background-dark/50 border border-white/10 rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary outline-none text-white" placeholder="********" />
+                <input
+                  type="password"
+                  required
+                  value={authPassword}
+                  onChange={e => setAuthPassword(e.target.value)}
+                  className="w-full bg-background-dark/50 border border-white/10 rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary outline-none text-white"
+                  placeholder="********"
+                />
               </div>
-              <button type="submit" className="w-full bg-primary hover:bg-primary/90 text-background-dark font-black py-4 rounded-lg transition-all">
-                ENTRAR
+
+              {authError && <p className="text-red-500 text-xs font-bold uppercase">{authError}</p>}
+
+              <button type="submit" className="w-full bg-primary hover:bg-primary/90 text-background-dark font-black py-4 rounded-lg transition-all uppercase tracking-tighter">
+                {isSignUp ? 'CADASTRAR' : 'ENTRAR'}
               </button>
             </form>
 
             <div className="mt-6 pt-6 border-t border-white/10 text-center">
-              <p className="text-sm text-slate-400">Não tem uma conta? <button className="text-primary font-bold hover:underline">Cadastre-se</button></p>
+              <p className="text-sm text-slate-400">
+                {isSignUp ? 'Já tem uma conta?' : 'Não tem uma conta?'}
+                <button
+                  onClick={() => setIsSignUp(!isSignUp)}
+                  className="text-primary font-bold hover:underline ml-1"
+                >
+                  {isSignUp ? 'Faça Login' : 'Cadastre-se'}
+                </button>
+              </p>
             </div>
           </div>
         </div>
