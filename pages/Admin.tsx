@@ -17,6 +17,17 @@ interface AdminProps {
 }
 
 const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [], onAddProduct, onEditProduct, onUpdateStatus, onUpdateBanners, onNavigateHome }) => {
+    // Extract unique categories and subcategories for the links
+    const availableCategories = Array.from(new Set(products.map(p => p.category))).filter(Boolean);
+    const availableSubcategories = Array.from(new Set(products.map(p => p.subcategory))).filter(Boolean);
+
+    const availableLinks = [
+        { label: 'Página Inicial', value: 'HOME' },
+        { label: 'Categorias (Geral)', value: 'CATEGORIES' },
+        ...availableCategories.map(c => ({ label: `Categoria: ${c}`, value: c.toUpperCase() })),
+        ...availableSubcategories.map(s => ({ label: `Subcategoria: ${s}`, value: s.toUpperCase() })),
+    ];
+
     const [activeTab, setActiveTab] = useState<AdminTab>('DASHBOARD');
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -871,29 +882,91 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                                                     }}
                                                 />
                                             </div>
-                                            <div>
-                                                <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Botão Primário (Texto)</label>
-                                                <input
-                                                    className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
-                                                    defaultValue={banner.button_primary_text}
-                                                    onBlur={async (e) => {
-                                                        await supabase.from('arena_banners').update({ button_primary_text: e.target.value }).eq('id', banner.id);
-                                                        onUpdateBanners?.();
-                                                    }}
-                                                />
+
+                                            {/* Primary Button Group */}
+                                            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Botão Primário (Texto)</label>
+                                                    <input
+                                                        className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
+                                                        defaultValue={banner.button_primary_text}
+                                                        onBlur={async (e) => {
+                                                            await supabase.from('arena_banners').update({ button_primary_text: e.target.value }).eq('id', banner.id);
+                                                            onUpdateBanners?.();
+                                                        }}
+                                                        placeholder="Ex: Ver Coleção"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Botão Primário (Link)</label>
+                                                    <select
+                                                        className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none appearance-none cursor-pointer"
+                                                        defaultValue={banner.button_primary_link}
+                                                        onChange={async (e) => {
+                                                            await supabase.from('arena_banners').update({ button_primary_link: e.target.value }).eq('id', banner.id);
+                                                            onUpdateBanners?.();
+                                                        }}
+                                                    >
+                                                        <option value="">Selecione um destino...</option>
+                                                        {availableLinks.map(link => (
+                                                            <option key={link.value} value={link.value}>{link.label}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Botão Primário (Link)</label>
-                                                <input
-                                                    className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
-                                                    defaultValue={banner.button_primary_link}
-                                                    onBlur={async (e) => {
-                                                        await supabase.from('arena_banners').update({ button_primary_link: e.target.value }).eq('id', banner.id);
-                                                        onUpdateBanners?.();
-                                                    }}
-                                                />
+
+                                            {/* Secondary Button Group */}
+                                            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Botão Secundário (Texto)</label>
+                                                    <input
+                                                        className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
+                                                        defaultValue={banner.button_secondary_text}
+                                                        onBlur={async (e) => {
+                                                            await supabase.from('arena_banners').update({ button_secondary_text: e.target.value }).eq('id', banner.id);
+                                                            onUpdateBanners?.();
+                                                        }}
+                                                        placeholder="Ex: Saiba Mais (Opcional)"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Botão Secundário (Link)</label>
+                                                    <select
+                                                        className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none appearance-none cursor-pointer"
+                                                        defaultValue={banner.button_secondary_link}
+                                                        onChange={async (e) => {
+                                                            await supabase.from('arena_banners').update({ button_secondary_link: e.target.value }).eq('id', banner.id);
+                                                            onUpdateBanners?.();
+                                                        }}
+                                                    >
+                                                        <option value="">Selecione um destino...</option>
+                                                        {availableLinks.map(link => (
+                                                            <option key={link.value} value={link.value}>{link.label}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-[#326747]/30">
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Tempo de Exibição (ms)</label>
+                                                    <input
+                                                        type="number"
+                                                        step="500"
+                                                        min="1000"
+                                                        className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
+                                                        defaultValue={banner.display_duration || 5000}
+                                                        onBlur={async (e) => {
+                                                            await supabase.from('arena_banners').update({ display_duration: parseInt(e.target.value) }).eq('id', banner.id);
+                                                            onUpdateBanners?.();
+                                                        }}
+                                                        placeholder="Padrão: 5000 (5 segundos)"
+                                                    />
+                                                    <p className="mt-1.5 text-[10px] text-[#5e8b72]">Padrão é 5000ms (5 segundos). Mínimo 1000ms.</p>
+                                                </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 ))}
                             </div>

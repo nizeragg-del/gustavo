@@ -73,4 +73,5 @@ export interface Banner {
   button_secondary_link: string;
   priority: number;
   active: boolean;
+  display_duration: number;
 }

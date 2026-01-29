@@ -12,9 +12,21 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = ({ products, banners, onProductClick, onAddToCart, onNavigate }) => {
   const [currentBanner, setCurrentBanner] = React.useState(0);
+  const [touchStart, setTouchStart] = React.useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = React.useState<number | null>(null);
+  const [isDragging, setIsDragging] = React.useState(false);
 
-  // Use the products passed from App.tsx instead of static constant
-  const featuredProducts = products.slice(0, 4);
+  // Auto-play logic
+  React.useEffect(() => {
+    if (banners.length <= 1) return;
+
+    const duration = banners[currentBanner]?.display_duration || 5000;
+    const timer = setTimeout(() => {
+      setCurrentBanner((prev) => (prev + 1) % banners.length);
+    }, duration);
+
+    return () => clearTimeout(timer);
+  }, [currentBanner, banners]);
 
   const nextBanner = () => {
     setCurrentBanner((prev) => (prev + 1) % (banners.length || 1));
@@ -24,21 +36,65 @@ const Home: React.FC<HomeProps> = ({ products, banners, onProductClick, onAddToC
     setCurrentBanner((prev) => (prev - 1 + (banners.length || 1)) % (banners.length || 1));
   };
 
-  const activeBanner = banners[currentBanner] || {
-    tag: 'Nova Temporada 24/25',
-    title: 'VISTA A SUA PAIXÃO',
-    subtitle: 'As camisas mais icônicas do futebol mundial, com qualidade premium, tecido tecnológico e envio imediato para todo o Brasil.',
-    image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCy7WJvWCxKaCiKZUnuTZW763X24csIe0Be1_bgb6_W3JCbLHId2G8voPerucom9sW5HKD6kb1WrUlrcQDCEhsQ7nWpyVc8FcGxI_vQRSKoHVEQtJtkfjKN5V7xBkC8WQd9NwQ_uMRxvNPMJWsiDsmy8sBwWXfdxRCNE3TD4U2WvFR93TW0FJaQ4XBXPzpEZVWMQaV5WamAfV0zsfM9rvfHm-nnfuZMj6J9qiSZu7MeeWCpYtJSQhxOWFYApOp8bCmNMu2KWluUvw',
-    button_primary_text: 'Ver Coleção',
-    button_primary_link: 'CATEGORIES',
-    button_secondary_text: 'Promoções',
-    button_secondary_link: '#'
+  // Drag handlers
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
   };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    if (isLeftSwipe) nextBanner();
+    if (isRightSwipe) prevBanner();
+  };
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    setTouchStart(e.clientX);
+    setIsDragging(true);
+  };
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (isDragging) setTouchEnd(e.clientX);
+  };
+
+  const onMouseUp = () => {
+    if (isDragging) {
+      if (touchStart && touchEnd) {
+        const distance = touchStart - touchEnd;
+        if (distance > minSwipeDistance) nextBanner();
+        else if (distance < -minSwipeDistance) prevBanner();
+      }
+      setIsDragging(false);
+      setTouchStart(null);
+      setTouchEnd(null);
+    }
+  };
+
+  // Use the products passed from App.tsx instead of static constant
+  const featuredProducts = products.slice(0, 4);
 
   return (
     <div className="animate-fade-in overflow-x-hidden">
       {/* Hero Section - Edge to Edge */}
-      <section className="relative h-[600px] w-full overflow-hidden">
+      <section
+        className="relative h-[600px] w-full overflow-hidden cursor-grab active:cursor-grabbing"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseUp}
+      >
         {/* Banner Container */}
         <div className="relative h-full w-full">
           {banners.map((banner, index) => (
@@ -49,7 +105,7 @@ const Home: React.FC<HomeProps> = ({ products, banners, onProductClick, onAddToC
                 backgroundImage: `linear-gradient(90deg, rgba(16, 34, 23, 0.95) 0%, rgba(16, 34, 23, 0.4) 50%, rgba(16, 34, 23, 0) 100%), url("${banner.image_url}")`
               }}
             >
-              <div className="flex flex-col gap-6 max-w-2xl">
+              <div className="flex flex-col gap-6 max-w-2xl select-none">
                 <span className="text-primary font-bold tracking-widest text-sm uppercase animate-slide-up">{banner.tag}</span>
                 <h1 className="text-white text-5xl md:text-8xl font-black leading-tight tracking-tighter uppercase italic animate-slide-up" style={{ animationDelay: '100ms' }}>
                   {banner.title.split('\n').map((line, i) => (
@@ -62,11 +118,23 @@ const Home: React.FC<HomeProps> = ({ products, banners, onProductClick, onAddToC
                   {banner.subtitle}
                 </p>
                 <div className="flex gap-4 mt-4 animate-slide-up" style={{ animationDelay: '300ms' }}>
-                  <button onClick={() => onNavigate(banner.button_primary_link || 'CATEGORIES')} className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-xl h-14 px-8 bg-primary text-background-dark text-base font-black hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_-10px_rgba(43,238,121,0.5)] uppercase tracking-tighter">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onNavigate(banner.button_primary_link || 'CATEGORIES');
+                    }}
+                    className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-xl h-14 px-8 bg-primary text-background-dark text-base font-black hover:scale-105 active:scale-95 transition-all shadow-[0_10px_30px_-10px_rgba(43,238,121,0.5)] uppercase tracking-tighter"
+                  >
                     {banner.button_primary_text}
                   </button>
                   {banner.button_secondary_text && (
-                    <button className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-xl h-14 px-8 border-2 border-white/20 text-white text-base font-bold hover:bg-white/10 transition-all uppercase tracking-tighter">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (banner.button_secondary_link) onNavigate(banner.button_secondary_link);
+                      }}
+                      className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-xl h-14 px-8 border-2 border-white/20 text-white text-base font-bold hover:bg-white/10 transition-all uppercase tracking-tighter"
+                    >
                       {banner.button_secondary_text}
                     </button>
                   )}
@@ -76,25 +144,19 @@ const Home: React.FC<HomeProps> = ({ products, banners, onProductClick, onAddToC
           ))}
         </div>
 
-        {/* Carousel Controls */}
+        {/* Carousel Controls - Just indicators now */}
         <div className="absolute bottom-10 left-6 md:left-16 lg:left-40 flex items-center gap-6 z-20">
           <div className="flex gap-2">
             {banners.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setCurrentBanner(i)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentBanner(i);
+                }}
                 className={`h-1.5 transition-all duration-300 rounded-full ${i === currentBanner ? 'w-12 bg-primary' : 'w-4 bg-white/20 hover:bg-white/40'}`}
               />
             ))}
-          </div>
-
-          <div className="flex gap-3 ml-4">
-            <button onClick={prevBanner} className="size-12 rounded-full border border-white/10 bg-black/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:text-background-dark transition-all">
-              <span className="material-symbols-outlined">chevron_left</span>
-            </button>
-            <button onClick={nextBanner} className="size-12 rounded-full border border-white/10 bg-black/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:text-background-dark transition-all">
-              <span className="material-symbols-outlined">chevron_right</span>
-            </button>
           </div>
         </div>
       </section>
