@@ -115,6 +115,8 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
         category: 'Clubes',
         subcategory: 'Nacional'
     });
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
 
     const [clients, setClients] = useState<Client[]>([]);
 
@@ -145,20 +147,54 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
         fetchActivities();
     }, [orders]);
 
-    const handleSubmitProduct = (e: React.FormEvent) => {
+    const handleSubmitProduct = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (onAddProduct && newProduct.name && newProduct.price && newProduct.image) {
+        if (!onAddProduct || !newProduct.name || !newProduct.price) return;
+
+        try {
+            setUploading(true);
+            let checkImageUrl = newProduct.image;
+
+            if (selectedFile) {
+                const fileExt = selectedFile.name.split('.').pop();
+                const fileName = `${Date.now()}.${fileExt}`;
+                const { data, error: uploadError } = await supabase.storage
+                    .from('products')
+                    .upload(fileName, selectedFile);
+
+                if (uploadError) throw uploadError;
+
+                const { data: { publicUrl } } = supabase.storage
+                    .from('products')
+                    .getPublicUrl(fileName);
+
+                checkImageUrl = publicUrl;
+            }
+
+            if (!checkImageUrl) {
+                alert("Por favor, selecione uma imagem ou forneça uma URL.");
+                setUploading(false);
+                return;
+            }
+
             onAddProduct({
-                id: Date.now(),
+                id: Date.now(), // Temporary ID, DB will assign real one
                 name: newProduct.name,
                 brand: newProduct.brand || "Genérica",
                 price: Number(newProduct.price),
-                image: newProduct.image,
+                image: checkImageUrl,
                 category: newProduct.category || "Clubes",
                 isNew: true
             });
+
             setActiveTab('PRODUCTS');
-            setNewProduct({ category: 'Clubes', subcategory: 'Nacional' }); // Reset
+            setNewProduct({ category: 'Clubes', subcategory: 'Nacional', image: '' }); // Reset
+            setSelectedFile(null);
+        } catch (error: any) {
+            console.error("Upload error:", error);
+            alert(`Erro no upload: ${error.message}`);
+        } finally {
+            setUploading(false);
         }
     };
 
@@ -256,13 +292,12 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
             {/* Sidebar */}
             <aside className="w-64 flex-shrink-0 border-r border-[#234832] bg-[#112218] flex flex-col justify-between p-4">
                 <div className="flex flex-col gap-8">
-                    <div onClick={onNavigateHome} className="flex gap-3 items-center px-2 cursor-pointer group">
-                        <div className="bg-primary/20 p-2 rounded-lg flex items-center justify-center group-hover:bg-primary/30 transition-colors">
+                    <div className="flex gap-3 items-center px-2">
+                        <div className="bg-primary/20 p-2 rounded-lg flex items-center justify-center">
                             <span className="material-symbols-outlined text-primary text-2xl">sports_soccer</span>
                         </div>
                         <div className="flex flex-col">
                             <h1 className="text-white text-base font-bold leading-none tracking-tight">Arena Golaço</h1>
-                            <p className="text-[#92c9a8] text-xs font-normal">Voltar para Loja</p>
                         </div>
                     </div>
                     <nav className="flex flex-col gap-2">
@@ -301,7 +336,11 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
                         </button>
                     </div>
                 </div>
-                <div className="mt-auto p-4 border-t border-[#234832]">
+                <div className="mt-auto p-4 border-t border-[#234832] space-y-2">
+                    <button onClick={onNavigateHome} className="flex w-full items-center gap-4 px-4 py-3 rounded-xl text-[#92c9a8] hover:bg-[#234832] hover:text-white transition-colors font-bold text-sm uppercase">
+                        <span className="material-symbols-outlined">arrow_back</span>
+                        Voltar ao Site
+                    </button>
                     <button onClick={handleLogout} className="flex w-full items-center gap-4 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors font-bold text-sm uppercase">
                         <span className="material-symbols-outlined">logout</span>
                         Sair do Painel
@@ -579,13 +618,23 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
                                             </select>
                                         </div>
                                         <div className="col-span-2">
-                                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">URL da Imagem</label>
-                                            <input required value={newProduct.image || ''} onChange={e => setNewProduct({ ...newProduct, image: e.target.value })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-4 py-3 text-white focus:border-primary outline-none" placeholder="https://..." />
+                                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Imagem do Produto</label>
+                                            <div className="flex gap-4 items-center">
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={e => setSelectedFile(e.target.files ? e.target.files[0] : null)}
+                                                    className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-4 py-3 text-white focus:border-primary outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-background-dark hover:file:bg-primary/90"
+                                                />
+                                            </div>
+                                            {/* Fallback URL input hidden or optional if needed, but removing for now as per user request to 'alterar' */}
                                         </div>
                                     </div>
                                     <div className="flex justify-end gap-4 pt-4 border-t border-[#326747]">
                                         <button type="button" onClick={() => setActiveTab('PRODUCTS')} className="px-6 py-2 text-[#92c9a8] font-bold hover:text-white">Cancelar</button>
-                                        <button type="submit" className="px-6 py-2 bg-primary text-background-dark font-bold rounded-lg hover:opacity-90">Salvar Produto</button>
+                                        <button type="submit" disabled={uploading} className="px-6 py-2 bg-primary text-background-dark font-bold rounded-lg hover:opacity-90 disabled:opacity-50">
+                                            {uploading ? 'Enviando...' : 'Salvar Produto'}
+                                        </button>
                                     </div>
                                 </div>
                             </form>
