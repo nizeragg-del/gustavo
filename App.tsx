@@ -259,7 +259,11 @@ const AppContent: React.FC = () => {
         setCurrentPage={(page) => {
           if (page === 'HOME') navigate('/');
           else if (page === 'CATEGORIES') navigate('/categories');
-          // Add other mappings or make generic
+          else if (page === 'CART') navigate('/cart');
+          else if (page === 'PROFILE') navigate('/profile');
+          else if (page === 'ORDERS') navigate('/orders');
+          else if (page === 'ADMIN') navigate('/admin');
+          else navigate(`/${page.toLowerCase()}`);
         }}
         cartCount={cart.reduce((a, b) => a + b.quantity, 0)}
         onCategorySelect={handleCategoryNav}
