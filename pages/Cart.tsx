@@ -62,11 +62,13 @@ const Cart: React.FC<CartProps> = ({ cart, setCurrentPage, isLoggedIn, onFinaliz
                 }
             } else {
                 console.error('Shipping API Error:', data);
-                alert('Erro ao calcular frete. Verifique o CEP.');
+                // Show the specific error message from the API or Proxy
+                const errorMessage = data.message || data.error || JSON.stringify(data);
+                alert(`Erro na API de Frete: ${errorMessage}`);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error calculating shipping:', error);
-            alert('Erro de conexão com serviço de frete.');
+            alert(`Erro de conexão: ${error.message}`);
         } finally {
             setLoadingShipping(false);
         }
