@@ -26,10 +26,10 @@ const Cart: React.FC<CartProps> = ({ cart, setCurrentPage, isLoggedIn, onFinaliz
 
             const products = cart.map(item => ({
                 id: item.id.toString(),
-                width: item.width || 20,
-                height: item.height || 5,
-                length: item.length || 30,
-                weight: item.weight || 0.3,
+                width: item.width || 12,
+                height: item.height || 2,
+                length: item.length || 17,
+                weight: item.weight || 0.3, // Keep 0.3kg as it's more realistic for 1 shirt + packaging
                 insurance_value: item.price,
                 quantity: item.quantity
             }));
@@ -193,9 +193,15 @@ const Cart: React.FC<CartProps> = ({ cart, setCurrentPage, isLoggedIn, onFinaliz
                         {shippingOptions.length > 0 && (
                             <div className="mb-8 space-y-3">
                                 {shippingOptions.map((opt: any) => {
-                                    let displayName = opt.name;
-                                    if (displayName === '.Package') displayName = 'PAC (Econômico)';
-                                    if (displayName === '.Com') displayName = 'SEDEX (Expresso)';
+                                    const companyName = opt.company?.name || '';
+                                    let serviceName = opt.name;
+
+                                    // Map service names to more user-friendly Brazilian terms if needed
+                                    // but keep the carrier context to avoid confusion
+                                    if (serviceName === '.Package') serviceName = 'Econômico';
+                                    if (serviceName === '.Com') serviceName = 'Expresso';
+
+                                    const displayName = `${companyName} ${serviceName}`;
 
                                     return (
                                         <label key={opt.id} className={`flex items-center justify-between p-4 rounded-2xl border-2 cursor-pointer transition-all ${Number(opt.price) === shippingCost ? 'bg-primary/5 border-primary shadow-lg shadow-primary/10' : 'bg-white border-slate-100 hover:border-slate-300'}`}>
@@ -207,9 +213,14 @@ const Cart: React.FC<CartProps> = ({ cart, setCurrentPage, isLoggedIn, onFinaliz
                                                     onChange={() => setShippingCost(Number(opt.price))}
                                                     className="accent-primary h-5 w-5"
                                                 />
-                                                <div>
-                                                    <p className="font-black text-sm text-slate-900 uppercase italic tracking-tighter">{displayName}</p>
-                                                    <p className="text-[10px] text-slate-400 font-bold uppercase">{opt.delivery_time} dias úteis</p>
+                                                <div className="flex items-center gap-3">
+                                                    {opt.company?.picture && (
+                                                        <img src={opt.company.picture} alt={companyName} className="h-6 w-auto grayscale group-hover:grayscale-0 transition-all opacity-50" />
+                                                    )}
+                                                    <div>
+                                                        <p className="font-black text-sm text-slate-900 uppercase italic tracking-tighter">{displayName}</p>
+                                                        <p className="text-[10px] text-slate-400 font-bold uppercase">{opt.delivery_time} dias úteis</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <span className="font-black text-primary italic">R$ {Number(opt.price).toFixed(2)}</span>
