@@ -139,120 +139,147 @@ const Profile: React.FC<ProfileProps> = ({ user: authUser, orders, initialTab = 
     };
 
     return (
-        <div className="max-w-[1440px] mx-auto px-6 py-10 animate-fade-in text-white">
-            <div className="flex flex-col lg:flex-row gap-10">
+        <div className="max-w-[1440px] mx-auto px-6 py-12 animate-fade-in text-slate-900 font-sans">
+            <div className="flex flex-col lg:flex-row gap-12">
                 {/* Sidebar */}
-                <aside className="w-full lg:w-72 shrink-0">
-                    <div className="sticky top-28 space-y-8 bg-white/5 p-6 rounded-xl border border-white/10">
-                        <div className="flex items-center gap-4">
-                            <div className="size-12 rounded-full bg-primary/20 flex items-center justify-center border-2 border-primary">
-                                <span className="material-symbols-outlined text-primary">person</span>
+                <aside className="w-full lg:w-80 shrink-0">
+                    <div className="sticky top-28 space-y-10 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/50">
+                        <div className="flex items-center gap-5 pb-6 border-b border-slate-50">
+                            <div className="size-16 rounded-2xl bg-primary/10 flex items-center justify-center border-2 border-primary/20 text-primary shadow-inner">
+                                <span className="material-symbols-outlined text-3xl">person</span>
                             </div>
                             <div className="flex flex-col">
-                                <h1 className="text-base font-bold text-white">{user.name}</h1>
-                                <p className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full w-fit mt-1 uppercase tracking-wider">Cliente</p>
+                                <h1 className="text-xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">{user.name}</h1>
+                                <p className="text-[10px] font-black text-primary bg-primary/10 px-3 py-1 rounded-full w-fit mt-2 uppercase tracking-widest italic">Membro Elite</p>
                             </div>
                         </div>
-                        <nav className="flex flex-col gap-2">
+                        <nav className="flex flex-col gap-3">
                             <button
                                 onClick={() => setActiveTab('OVERVIEW')}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all w-full text-left ${activeTab === 'OVERVIEW' ? 'bg-primary text-black font-semibold shadow-lg shadow-primary/20' : 'hover:bg-white/5 text-slate-300'}`}
+                                className={`flex items-center justify-between px-5 py-4 rounded-2xl transition-all w-full text-left group ${activeTab === 'OVERVIEW' ? 'bg-primary text-white font-black shadow-lg shadow-primary/30 italic' : 'hover:bg-slate-50 text-slate-400'}`}
                             >
-                                <span className="material-symbols-outlined">dashboard</span>
-                                <span className="text-sm">Visão Geral</span>
+                                <div className="flex items-center gap-4">
+                                    <span className="material-symbols-outlined">dashboard</span>
+                                    <span className="text-sm uppercase tracking-tight">Painel</span>
+                                </div>
+                                {activeTab === 'OVERVIEW' && <span className="material-symbols-outlined text-sm">chevron_right</span>}
                             </button>
                             <button
                                 onClick={() => setActiveTab('DATA')}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all w-full text-left ${activeTab === 'DATA' ? 'bg-primary text-black font-semibold shadow-lg shadow-primary/20' : 'hover:bg-white/5 text-slate-300'}`}
+                                className={`flex items-center justify-between px-5 py-4 rounded-2xl transition-all w-full text-left group ${activeTab === 'DATA' ? 'bg-primary text-white font-black shadow-lg shadow-primary/30 italic' : 'hover:bg-slate-50 text-slate-400'}`}
                             >
-                                <span className="material-symbols-outlined">person</span>
-                                <span className="text-sm">Meus Dados</span>
+                                <div className="flex items-center gap-4">
+                                    <span className="material-symbols-outlined">badge</span>
+                                    <span className="text-sm uppercase tracking-tight">Meus Dados</span>
+                                </div>
+                                {activeTab === 'DATA' && <span className="material-symbols-outlined text-sm">chevron_right</span>}
                             </button>
                             <button
                                 onClick={() => setActiveTab('ORDERS')}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all w-full text-left ${activeTab === 'ORDERS' ? 'bg-primary text-black font-semibold shadow-lg shadow-primary/20' : 'hover:bg-white/5 text-slate-300'}`}
+                                className={`flex items-center justify-between px-5 py-4 rounded-2xl transition-all w-full text-left group ${activeTab === 'ORDERS' ? 'bg-primary text-white font-black shadow-lg shadow-primary/30 italic' : 'hover:bg-slate-50 text-slate-400'}`}
                             >
-                                <span className="material-symbols-outlined">package_2</span>
-                                <span className="text-sm font-medium">Meus Pedidos</span>
+                                <div className="flex items-center gap-4">
+                                    <span className="material-symbols-outlined">package_2</span>
+                                    <span className="text-sm uppercase tracking-tight">Pedidos</span>
+                                </div>
+                                {activeTab === 'ORDERS' && <span className="material-symbols-outlined text-sm">chevron_right</span>}
                             </button>
                             <button
                                 onClick={() => setActiveTab('ADDRESSES')}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all w-full text-left ${activeTab === 'ADDRESSES' ? 'bg-primary text-black font-semibold shadow-lg shadow-primary/20' : 'hover:bg-white/5 text-slate-300'}`}
+                                className={`flex items-center justify-between px-5 py-4 rounded-2xl transition-all w-full text-left group ${activeTab === 'ADDRESSES' ? 'bg-primary text-white font-black shadow-lg shadow-primary/30 italic' : 'hover:bg-slate-50 text-slate-400'}`}
                             >
-                                <span className="material-symbols-outlined">location_on</span>
-                                <span className="text-sm font-medium">Endereços</span>
+                                <div className="flex items-center gap-4">
+                                    <span className="material-symbols-outlined">distance</span>
+                                    <span className="text-sm uppercase tracking-tight">Endereços</span>
+                                </div>
+                                {activeTab === 'ADDRESSES' && <span className="material-symbols-outlined text-sm">chevron_right</span>}
                             </button>
-                            <hr className="my-4 border-white/10" />
-                            <button
-                                onClick={onLogout}
-                                className="flex items-center gap-3 px-4 py-3 rounded-lg text-rose-500 hover:bg-rose-500/10 transition-all w-full"
-                            >
-                                <span className="material-symbols-outlined">logout</span>
-                                <span className="text-sm font-medium">Sair</span>
-                            </button>
+
+                            <div className="pt-6 mt-6 border-t border-slate-50">
+                                <button
+                                    onClick={onLogout}
+                                    className="flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all w-full group"
+                                >
+                                    <span className="material-symbols-outlined group-hover:rotate-12 transition-transform">logout</span>
+                                    <span className="text-sm uppercase font-black italic tracking-widest">Sair</span>
+                                </button>
+                            </div>
                         </nav>
                     </div>
                 </aside>
 
                 {/* Content Area */}
-                <div className="flex-1 space-y-8 animate-fade-in">
+                <div className="flex-1 space-y-12 animate-fade-in">
 
                     {activeTab === 'OVERVIEW' && (
                         <>
                             <section>
-                                <div className="flex items-center justify-between px-4 mb-4">
-                                    <h2 className="text-2xl font-bold tracking-tight">Último Pedido</h2>
-                                    <button onClick={() => setActiveTab('ORDERS')} className="text-sm font-medium text-primary cursor-pointer hover:underline">Ver todos</button>
+                                <div className="flex items-center justify-between mb-8">
+                                    <h2 className="text-3xl font-black uppercase italic tracking-tighter">Última Atividade</h2>
+                                    <button onClick={() => setActiveTab('ORDERS')} className="text-[10px] font-black text-primary uppercase tracking-[0.2em] italic hover:translate-x-1 transition-transform flex items-center gap-2">Explorar Histórico <span className="material-symbols-outlined text-sm">trending_flat</span></button>
                                 </div>
                                 {orders.length > 0 ? (
-                                    <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden shadow-sm">
-                                        <div className="p-6">
-                                            <div className="flex flex-col md:flex-row gap-8">
-                                                <div className="flex-1 space-y-6">
-                                                    <div className="flex flex-col gap-1">
-                                                        <div className="flex items-center gap-2 mb-1">
-                                                            <span className={`size-2 rounded-full ${orders[0].status === 'Entregue' ? 'bg-green-500' : 'bg-primary animate-pulse'}`}></span>
-                                                            <p className="text-primary text-xs font-bold uppercase tracking-widest">{orders[0].status}</p>
+                                    <div className="group bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-2xl shadow-slate-200/40 hover:border-primary/20 transition-all duration-500">
+                                        <div className="p-10">
+                                            <div className="flex flex-col md:flex-row gap-12">
+                                                <div className="flex-1 space-y-8">
+                                                    <div className="flex flex-col gap-2">
+                                                        <div className="flex items-center gap-3 mb-2">
+                                                            <span className={`h-2.5 w-2.5 rounded-full ${orders[0].status === 'Entregue' ? 'bg-primary shadow-[0_0_12px_rgba(16,185,129,0.5)]' : 'bg-primary animate-pulse'}`}></span>
+                                                            <p className="text-primary text-[10px] font-black uppercase tracking-[0.3em] italic">{orders[0].status}</p>
                                                         </div>
-                                                        <h3 className="text-xl font-bold">{typeof orders[0].items[0] === 'string' ? orders[0].items[0] : orders[0].items[0].name}</h3>
-                                                        <p className="text-white/60 text-sm font-medium">Pedido {orders[0].id} • Realizado em {orders[0].date}</p>
+                                                        <h3 className="text-4xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">
+                                                            {typeof orders[0].items[0] === 'string' ? orders[0].items[0] : orders[0].items[0].name}
+                                                        </h3>
+                                                        <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">
+                                                            Pedido <span className="text-slate-900">#{orders[0].id}</span> • {orders[0].date}
+                                                        </p>
                                                     </div>
-                                                    {/* Simplified Timeline */}
-                                                    <div className="w-full bg-white/10 h-2 rounded-full mt-4 overflow-hidden">
-                                                        <div className={`h-full bg-primary transition-all duration-1000 ${orders[0].status === 'Processando' ? 'w-1/3' : orders[0].status === 'Enviado' ? 'w-2/3' : 'w-full'}`}></div>
+                                                    {/* Progress Bar */}
+                                                    <div className="relative pt-4">
+                                                        <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden shadow-inner">
+                                                            <div className={`h-full bg-primary transition-all duration-1000 shadow-[0_0_20px_rgba(16,185,129,0.3)] ${orders[0].status === 'Processando' ? 'w-1/3' : orders[0].status === 'Enviado' ? 'w-2/3' : 'w-full'}`}></div>
+                                                        </div>
+                                                        <div className="flex justify-between mt-4 text-[9px] font-black text-slate-300 uppercase italic tracking-widest">
+                                                            <span className={orders[0].status === 'Processando' ? 'text-primary' : ''}>Confirmado</span>
+                                                            <span className={orders[0].status === 'Enviado' ? 'text-primary' : ''}>Em Rota</span>
+                                                            <span className={orders[0].status === 'Entregue' ? 'text-primary' : ''}>No Campo</span>
+                                                        </div>
                                                     </div>
-                                                    <p className="text-xs text-white/40">Status atual: {orders[0].status}</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="p-8 text-center bg-white/5 rounded-xl border border-white/10">
-                                        <p className="text-white/60">Você ainda não fez nenhum pedido.</p>
+                                    <div className="py-20 text-center bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-100">
+                                        <div className="h-16 w-16 rounded-full bg-white flex items-center justify-center text-slate-200 mx-auto mb-4 italic font-black shadow-sm">!</div>
+                                        <p className="text-slate-400 font-bold uppercase tracking-tight">Nenhuma atividade registrada no campo.</p>
                                     </div>
                                 )}
                             </section>
-                            <div className="grid md:grid-cols-2 gap-6">
-                                <div onClick={() => setActiveTab('DATA')} className="bg-white/5 p-6 rounded-xl border border-white/10 cursor-pointer hover:border-primary/50 transition-colors group">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <span className="material-symbols-outlined text-3xl text-primary">person</span>
-                                        <span className="material-symbols-outlined text-white/20 group-hover:text-primary transition-colors">arrow_forward</span>
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <div onClick={() => setActiveTab('DATA')} className="bg-white p-10 rounded-[2.5rem] border border-slate-100 cursor-pointer hover:border-primary/30 transition-all duration-500 shadow-xl shadow-slate-200/40 group relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform"></div>
+                                    <div className="flex items-center justify-between mb-8 relative z-10">
+                                        <span className="material-symbols-outlined text-4xl text-primary font-black">badge</span>
+                                        <span className="material-symbols-outlined text-slate-200 group-hover:text-primary transition-colors">arrow_forward</span>
                                     </div>
-                                    <h3 className="font-bold text-lg">Meus Dados</h3>
-                                    <div className="mt-2 space-y-1">
-                                        <p className="text-white/40 text-xs font-bold uppercase tracking-widest">WhatsApp</p>
-                                        <p className="text-white/80 font-mono text-sm">{user.phone || 'Não informado'}</p>
+                                    <h3 className="font-black text-2xl uppercase italic tracking-tighter mb-4">Meus Dados</h3>
+                                    <div className="space-y-2 pb-2">
+                                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest italic">Identificação Principal</p>
+                                        <p className="text-slate-900 font-black text-lg italic tracking-tight">{user.name}</p>
                                     </div>
                                 </div>
-                                <div onClick={() => setActiveTab('ADDRESSES')} className="bg-white/5 p-6 rounded-xl border border-white/10 cursor-pointer hover:border-primary/50 transition-colors group">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <span className="material-symbols-outlined text-3xl text-primary">location_on</span>
-                                        <span className="material-symbols-outlined text-white/20 group-hover:text-primary transition-colors">arrow_forward</span>
+                                <div onClick={() => setActiveTab('ADDRESSES')} className="bg-white p-10 rounded-[2.5rem] border border-slate-100 cursor-pointer hover:border-primary/30 transition-all duration-500 shadow-xl shadow-slate-200/40 group relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform"></div>
+                                    <div className="flex items-center justify-between mb-8 relative z-10">
+                                        <span className="material-symbols-outlined text-4xl text-primary font-black">distance</span>
+                                        <span className="material-symbols-outlined text-slate-200 group-hover:text-primary transition-colors">arrow_forward</span>
                                     </div>
-                                    <h3 className="font-bold text-lg">Endereços</h3>
-                                    <div className="mt-2 space-y-1">
-                                        <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Principal</p>
-                                        <p className="text-white/80 text-sm truncate">{user.addresses.find(a => a.isDefault)?.street || 'Nenhum cadastrado'}</p>
+                                    <h3 className="font-black text-2xl uppercase italic tracking-tighter mb-4">Endereços</h3>
+                                    <div className="space-y-2 pb-2">
+                                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest italic">Base de Operações</p>
+                                        <p className="text-slate-900 font-black text-lg italic tracking-tighter truncate">{user.addresses.find(a => a.isDefault)?.street || 'Pendente Cadastro'}</p>
                                     </div>
                                 </div>
                             </div>
@@ -260,68 +287,74 @@ const Profile: React.FC<ProfileProps> = ({ user: authUser, orders, initialTab = 
                     )}
 
                     {activeTab === 'DATA' && (
-                        <section className="bg-white/5 rounded-xl border border-white/10 p-8">
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-xl font-bold">Informações Pessoais</h2>
+                        <section className="bg-white rounded-[2.5rem] border border-slate-100 p-12 shadow-2xl shadow-slate-200/40">
+                            <div className="flex justify-between items-center mb-10">
+                                <h2 className="text-3xl font-black uppercase italic tracking-tighter">Informações Pessoais</h2>
                                 {!isEditing ? (
-                                    <button onClick={() => setIsEditing(true)} className="text-primary text-sm font-bold hover:underline flex items-center gap-1">
-                                        <span className="material-symbols-outlined text-sm">edit</span> Editar
+                                    <button onClick={() => setIsEditing(true)} className="bg-slate-900 text-white rounded-xl px-6 py-2.5 font-black text-[10px] uppercase italic tracking-[0.2em] hover:bg-primary transition-all shadow-lg active:scale-95 flex items-center gap-2">
+                                        <span className="material-symbols-outlined text-sm">edit</span> Editar Perfil
                                     </button>
                                 ) : (
-                                    <div className="flex gap-2">
-                                        <button onClick={() => setIsEditing(false)} className="text-white/60 text-sm font-bold hover:underline px-3">Cancelar</button>
-                                        <button onClick={handleSaveData} className="text-background-dark bg-primary px-4 py-1.5 rounded text-sm font-bold">Salvar</button>
+                                    <div className="flex gap-4">
+                                        <button onClick={() => setIsEditing(false)} className="text-slate-400 text-[10px] font-black uppercase italic tracking-widest px-4 hover:text-slate-900 transition-colors">Cancelar</button>
+                                        <button onClick={handleSaveData} className="bg-primary text-white rounded-xl px-8 py-2.5 font-black text-[10px] uppercase italic tracking-[0.2em] shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">Sincronizar</button>
                                     </div>
                                 )}
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-white/40 mb-2">Nome Completo</label>
-                                    <input disabled={!isEditing} type="text" value={user.name} onChange={e => setUser({ ...user, name: e.target.value })} className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white disabled:opacity-50 focus:border-primary outline-none" />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                <div className="space-y-3">
+                                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Nome de Atleta</label>
+                                    <input disabled={!isEditing} type="text" value={user.name} onChange={e => setUser({ ...user, name: e.target.value })} className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-slate-900 font-black italic disabled:opacity-50 focus:border-primary outline-none shadow-inner transition-all" />
                                 </div>
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-white/40 mb-2">E-mail</label>
-                                    <input disabled={!isEditing} type="email" value={user.email} onChange={e => setUser({ ...user, email: e.target.value })} className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white disabled:opacity-50 focus:border-primary outline-none" />
+                                <div className="space-y-3">
+                                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Correio Eletrônico</label>
+                                    <input disabled={!isEditing} type="email" value={user.email} onChange={e => setUser({ ...user, email: e.target.value })} className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-slate-900 font-black italic disabled:opacity-50 focus:border-primary outline-none shadow-inner transition-all" />
                                 </div>
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-white/40 mb-2">Telefone</label>
-                                    <input disabled={!isEditing} type="tel" value={user.phone} onChange={e => setUser({ ...user, phone: e.target.value })} className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white disabled:opacity-50 focus:border-primary outline-none" />
+                                <div className="space-y-3">
+                                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 italic">WhatsApp p/ Contato</label>
+                                    <input disabled={!isEditing} type="tel" value={user.phone} onChange={e => setUser({ ...user, phone: e.target.value })} className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-slate-900 font-black italic disabled:opacity-50 focus:border-primary outline-none shadow-inner transition-all" />
                                 </div>
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest text-white/40 mb-2">CPF</label>
-                                    <input disabled={!isEditing} type="text" value={user.cpf} onChange={e => setUser({ ...user, cpf: e.target.value })} className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white disabled:opacity-50 focus:border-primary outline-none" />
+                                <div className="space-y-3">
+                                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Nº de Cadastro (CPF)</label>
+                                    <input disabled={!isEditing} type="text" value={user.cpf} onChange={e => setUser({ ...user, cpf: e.target.value })} className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-slate-900 font-black italic disabled:opacity-50 focus:border-primary outline-none shadow-inner transition-all" />
                                 </div>
                             </div>
                         </section>
                     )}
 
                     {activeTab === 'ORDERS' && (
-                        <section>
-                            <h2 className="text-2xl font-bold mb-6">Histórico de Pedidos</h2>
-                            <div className="space-y-4">
+                        <section className="space-y-8">
+                            <h2 className="text-3xl font-black uppercase italic tracking-tighter">Histórico de Conquistas</h2>
+                            <div className="grid gap-6">
                                 {orders.map((order, idx) => (
-                                    <div key={idx} className="bg-white/5 rounded-xl border border-white/10 p-6 flex flex-col md:flex-row gap-6 justify-between items-center hover:bg-white/10 transition-colors">
-                                        <div className="flex items-start gap-4">
-                                            <div className="bg-white/10 p-3 rounded-lg">
-                                                <span className="material-symbols-outlined text-primary">inventory_2</span>
+                                    <div key={idx} className="group bg-white rounded-[2.5rem] border border-slate-100 p-10 flex flex-col md:flex-row gap-8 justify-between items-center hover:border-primary/20 hover:shadow-2xl transition-all duration-500 shadow-lg shadow-slate-100">
+                                        <div className="flex items-center gap-8 w-full">
+                                            <div className="bg-slate-50 p-6 rounded-2xl shadow-inner group-hover:bg-primary/5 transition-colors">
+                                                <span className="material-symbols-outlined text-4xl text-primary font-black">sports_score</span>
                                             </div>
-                                            <div>
-                                                <h3 className="font-bold text-lg">{order.id}</h3>
-                                                <p className="text-white/60 text-sm">{order.date}</p>
-                                                <p className="text-white/80 text-sm mt-1">
-                                                    {Array.isArray(order.items) ? (typeof order.items[0] === 'string' ? order.items.join(', ') : `${order.items.length} itens`) : order.items}
+                                            <div className="flex-1">
+                                                <div className="flex items-center gap-3 mb-1">
+                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">{order.date}</p>
+                                                    <span className="h-1 w-1 bg-slate-200 rounded-full"></span>
+                                                    <p className="text-[10px] font-black text-primary uppercase tracking-widest italic">#{order.id}</p>
+                                                </div>
+                                                <h3 className="font-black text-2xl uppercase italic tracking-tighter text-slate-900">
+                                                    {Array.isArray(order.items) ? (typeof order.items[0] === 'string' ? order.items[0] : `${order.items.length} Mantos Selecionados`) : order.items}
+                                                </h3>
+                                                <p className="text-slate-400 text-xs font-bold mt-2 uppercase tracking-wide">
+                                                    {Array.isArray(order.items) && order.items.length > 1 ? `E mais ${order.items.length - 1} itens especialistas` : 'Produto de alta performance'}
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="text-right flex flex-col items-end gap-2 w-full md:w-auto">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${order.status === 'Entregue' ? 'bg-green-500/20 text-green-500' :
-                                                order.status === 'Cancelado' ? 'bg-red-500/20 text-red-500' :
-                                                    'bg-yellow-500/20 text-yellow-500'
+                                        <div className="text-right flex flex-col md:items-end gap-3 w-full md:w-auto pb-4 md:pb-0">
+                                            <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest italic ${order.status === 'Entregue' ? 'bg-green-50/80 text-green-600 border border-green-100' :
+                                                order.status === 'Cancelado' ? 'bg-red-50/80 text-red-500 border border-red-100' :
+                                                    'bg-primary/10 text-primary border border-primary/20'
                                                 }`}>
                                                 {order.status}
                                             </span>
-                                            <p className="font-black text-lg">R$ {order.total.toFixed(2)}</p>
-                                            <button className="text-primary text-xs font-bold hover:underline">Ver Detalhes</button>
+                                            <p className="font-black text-3xl italic tracking-tighter text-slate-900">R$ {order.total.toFixed(2)}</p>
+                                            <button className="text-primary text-[10px] font-black uppercase italic tracking-widest hover:underline hover:translate-x-1 transition-transform flex items-center gap-2 justify-end">Explorar Guia <span className="material-symbols-outlined text-sm">chevron_right</span></button>
                                         </div>
                                     </div>
                                 ))}
@@ -330,48 +363,76 @@ const Profile: React.FC<ProfileProps> = ({ user: authUser, orders, initialTab = 
                     )}
 
                     {activeTab === 'ADDRESSES' && (
-                        <section className="space-y-6">
+                        <section className="space-y-10">
                             <div className="flex justify-between items-center">
-                                <h2 className="text-2xl font-bold">Meus Endereços</h2>
-                                <button onClick={() => setIsAddingAddress(true)} className="bg-primary text-background-dark px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:opacity-90">
-                                    <span className="material-symbols-outlined text-sm">add</span> Adicionar Novo
+                                <h2 className="text-3xl font-black uppercase italic tracking-tighter">Bases de Envio</h2>
+                                <button onClick={() => setIsAddingAddress(true)} className="bg-slate-900 text-white px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase italic tracking-[0.2em] flex items-center gap-3 hover:bg-primary transition-all shadow-xl active:scale-95">
+                                    <span className="material-symbols-outlined text-sm">add_location_alt</span> Nova Base
                                 </button>
                             </div>
 
                             {isAddingAddress && (
-                                <div className="bg-white/5 border border-white/10 p-6 rounded-xl animate-fade-in">
-                                    <h3 className="font-bold mb-4">Novo Endereço</h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                        <input placeholder="Nome (ex: Casa)" className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.name || ''} onChange={e => setNewAddress({ ...newAddress, name: e.target.value })} />
-                                        <input placeholder="CEP" className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.zip || ''} onChange={e => setNewAddress({ ...newAddress, zip: e.target.value })} />
-                                        <input placeholder="Nº da Residência" className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.number || ''} onChange={e => setNewAddress({ ...newAddress, number: e.target.value })} />
-                                        <input placeholder="Endereço" className="md:col-span-3 bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.street || ''} onChange={e => setNewAddress({ ...newAddress, street: e.target.value })} />
-                                        <input placeholder="Bairro" className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.district || ''} onChange={e => setNewAddress({ ...newAddress, district: e.target.value })} />
-                                        <input placeholder="Cidade" className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.city || ''} onChange={e => setNewAddress({ ...newAddress, city: e.target.value })} />
-                                        <input placeholder="Estado (UF)" className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.state || ''} onChange={e => setNewAddress({ ...newAddress, state: e.target.value })} />
+                                <div className="bg-white border border-slate-100 p-10 rounded-[2.5rem] shadow-2xl animate-fade-in relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full -mr-20 -mt-20"></div>
+                                    <h3 className="text-xl font-black uppercase italic tracking-tighter mb-8 relative z-10">Registrar Localização</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Identificador (Ex: Casa)</label>
+                                            <input className="w-full bg-slate-50 border border-slate-200 rounded-xl px-6 py-4 text-slate-900 font-black italic outline-none focus:border-primary shadow-inner" value={newAddress.name || ''} onChange={e => setNewAddress({ ...newAddress, name: e.target.value })} />
+                                        </div>
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Código Postal (CEP)</label>
+                                            <input className="w-full bg-slate-50 border border-slate-200 rounded-xl px-6 py-4 text-slate-900 font-black italic outline-none focus:border-primary shadow-inner" value={newAddress.zip || ''} onChange={e => setNewAddress({ ...newAddress, zip: e.target.value })} />
+                                        </div>
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Número</label>
+                                            <input className="w-full bg-slate-50 border border-slate-200 rounded-xl px-6 py-4 text-slate-900 font-black italic outline-none focus:border-primary shadow-inner" value={newAddress.number || ''} onChange={e => setNewAddress({ ...newAddress, number: e.target.value })} />
+                                        </div>
+                                        <div className="md:col-span-3 space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Logradouro / Avenida</label>
+                                            <input className="w-full bg-slate-50 border border-slate-200 rounded-xl px-6 py-4 text-slate-900 font-black italic outline-none focus:border-primary shadow-inner" value={newAddress.street || ''} onChange={e => setNewAddress({ ...newAddress, street: e.target.value })} />
+                                        </div>
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Bairro</label>
+                                            <input className="w-full bg-slate-50 border border-slate-200 rounded-xl px-6 py-4 text-slate-900 font-black italic outline-none focus:border-primary shadow-inner" value={newAddress.district || ''} onChange={e => setNewAddress({ ...newAddress, district: e.target.value })} />
+                                        </div>
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Cidade</label>
+                                            <input className="w-full bg-slate-50 border border-slate-200 rounded-xl px-6 py-4 text-slate-900 font-black italic outline-none focus:border-primary shadow-inner" value={newAddress.city || ''} onChange={e => setNewAddress({ ...newAddress, city: e.target.value })} />
+                                        </div>
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Estado (UF)</label>
+                                            <input className="w-full bg-slate-50 border border-slate-200 rounded-xl px-6 py-4 text-slate-900 font-black italic outline-none focus:border-primary shadow-inner" value={newAddress.state || ''} onChange={e => setNewAddress({ ...newAddress, state: e.target.value })} />
+                                        </div>
                                     </div>
-                                    <div className="flex justify-end gap-2">
-                                        <button onClick={() => setIsAddingAddress(false)} className="text-white/60 font-bold text-sm px-4">Cancelar</button>
-                                        <button onClick={handleAddAddress} className="text-primary font-bold text-sm px-4">Salvar</button>
+                                    <div className="flex justify-end gap-6 pt-4">
+                                        <button onClick={() => setIsAddingAddress(false)} className="text-slate-400 font-black text-[10px] uppercase italic tracking-widest hover:text-slate-900">Abortar</button>
+                                        <button onClick={handleAddAddress} className="bg-primary text-white rounded-xl px-10 py-3 font-black text-[10px] uppercase italic tracking-[0.2em] shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">Ativar Localização</button>
                                     </div>
                                 </div>
                             )}
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 {user.addresses.map(addr => (
-                                    <div key={addr.id} className={`p-6 rounded-xl border relative group ${addr.isDefault ? 'border-primary bg-primary/5' : 'border-white/10 bg-white/5'}`}>
-                                        {addr.isDefault && <span className="absolute top-4 right-4 text-[10px] font-bold uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded">Principal</span>}
-                                        <h3 className="font-bold text-lg mb-2">{addr.name}</h3>
-                                        <p className="text-white/60 text-sm">{addr.street}{addr.number ? `, ${addr.number}` : ''}</p>
-                                        <p className="text-white/60 text-sm">{addr.district} - {addr.city}/{addr.state}</p>
-                                        <p className="text-white/60 text-sm">CEP: {addr.zip}</p>
+                                    <div key={addr.id} className={`p-10 rounded-[2.5rem] border-2 relative group transition-all duration-500 overflow-hidden ${addr.isDefault ? 'border-primary bg-primary/5 shadow-2xl shadow-primary/10' : 'border-slate-100 bg-white hover:border-slate-300 shadow-xl shadow-slate-200/40'}`}>
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform"></div>
+                                        {addr.isDefault && <span className="absolute top-8 right-8 text-[10px] font-black uppercase tracking-widest text-white bg-primary px-4 py-1.5 rounded-full italic shadow-lg shadow-primary/30">QG Principal</span>}
+                                        <div className="flex items-center gap-4 mb-6">
+                                            <span className="material-symbols-outlined text-primary text-3xl font-black">location_city</span>
+                                            <h3 className="font-black text-2xl uppercase italic tracking-tighter text-slate-900">{addr.name}</h3>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">{addr.street}{addr.number ? `, ${addr.number}` : ''}</p>
+                                            <p className="text-slate-400 text-xs font-bold uppercase tracking-wide">{addr.district} • {addr.city}/{addr.state}</p>
+                                            <p className="text-slate-400 text-[10px] font-black mt-2 inline-block bg-slate-100 px-3 py-1 rounded-lg">CEP {addr.zip}</p>
+                                        </div>
 
-                                        <div className="flex gap-4 mt-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button className="text-white hover:text-primary text-xs font-bold uppercase">Editar</button>
+                                        <div className="flex gap-6 mt-10 pt-6 border-t border-slate-50 md:opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                                            <button className="text-slate-900 hover:text-primary text-[10px] font-black uppercase italic tracking-widest transition-colors flex items-center gap-2"><span className="material-symbols-outlined text-sm">edit</span> Editar</button>
                                             {!addr.isDefault && (
                                                 <>
-                                                    <button onClick={() => handleSetDefaultAddress(addr.id)} className="text-white hover:text-primary text-xs font-bold uppercase">Definir Principal</button>
-                                                    <button onClick={() => handleRemoveAddress(addr.id)} className="text-red-500 hover:text-red-400 text-xs font-bold uppercase">Excluir</button>
+                                                    <button onClick={() => handleSetDefaultAddress(addr.id)} className="text-slate-900 hover:text-primary text-[10px] font-black uppercase italic tracking-widest transition-colors flex items-center gap-2"><span className="material-symbols-outlined text-sm">home</span> Setar QG</button>
+                                                    <button onClick={() => handleRemoveAddress(addr.id)} className="text-red-500 hover:text-red-600 text-[10px] font-black uppercase italic tracking-widest transition-colors flex items-center gap-2 ml-auto"><span className="material-symbols-outlined text-sm">delete</span> Deletar</button>
                                                 </>
                                             )}
                                         </div>

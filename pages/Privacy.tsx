@@ -1,73 +1,96 @@
 import React from 'react';
 
 const Privacy: React.FC = () => {
-  return (
-    <div className="max-w-4xl mx-auto px-6 py-16 animate-fade-in text-white">
-      <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-8">Política de Privacidade</h1>
-      
-      <div className="space-y-8 text-white/70 leading-relaxed text-justify">
-        <p className="text-lg text-white font-medium">
-            Última atualização: 25 de Outubro de 2024
-        </p>
-        
-        <p>
-            A <strong>Arena Golaço</strong> valoriza a privacidade de seus usuários e se compromete a proteger seus dados pessoais. Esta Política de Privacidade descreve como coletamos, usamos, armazenamos e compartilhamos suas informações ao utilizar nosso site.
-        </p>
+    return (
+        <div className="max-w-[1440px] mx-auto px-6 py-20 animate-fade-in text-slate-900 font-sans">
+            <div className="bg-white border border-slate-100 rounded-[3rem] p-12 md:p-20 shadow-2xl shadow-slate-200/50 relative overflow-hidden">
+                <div className="absolute top-0 right-0 size-96 bg-primary/5 rounded-full -mr-48 -mt-48"></div>
 
-        <section>
-            <h2 className="text-xl font-bold text-white mb-4">1. Coleta de Informações</h2>
-            <p>
-                Coletamos informações que você nos fornece diretamente, como quando cria uma conta, faz um pedido, assina nossa newsletter ou entra em contato conosco. As informações podem incluir: nome, endereço de e-mail, endereço de entrega, número de telefone, CPF e dados de pagamento.
-            </p>
-        </section>
+                <header className="relative mb-16">
+                    <h1 className="text-5xl md:text-7xl font-black text-slate-900 uppercase italic tracking-tighter leading-none mb-8">
+                        Política de Privacidade
+                    </h1>
+                    <div className="flex items-center gap-4">
+                        <div className="h-1.5 w-12 bg-primary rounded-full"></div>
+                        <p className="text-slate-400 font-black text-[10px] uppercase tracking-[0.2em] italic">
+                            Última atualização: 25 de Outubro de 2024
+                        </p>
+                    </div>
+                </header>
 
-        <section>
-            <h2 className="text-xl font-bold text-white mb-4">2. Uso das Informações</h2>
-            <p>Utilizamos suas informações para:</p>
-            <ul className="list-disc list-inside mt-2 space-y-1">
-                <li>Processar e entregar seus pedidos;</li>
-                <li>Enviar atualizações sobre o status do pedido;</li>
-                <li>Responder a suas dúvidas e solicitações;</li>
-                <li>Enviar comunicações de marketing (caso tenha optado por receber);</li>
-                <li>Melhorar a segurança e funcionamento do site.</li>
-            </ul>
-        </section>
+                <div className="space-y-12 text-slate-500 font-medium leading-relaxed relative xl:pr-60">
+                    <p className="text-xl text-slate-600 font-bold border-l-4 border-primary pl-6">
+                        A Arena Golaço valoriza a privacidade de seus usuários e se compromete a proteger seus dados pessoais. Esta Política descreve como coletamos, usamos e protegemos sua escalada em nosso sistema.
+                    </p>
 
-        <section>
-            <h2 className="text-xl font-bold text-white mb-4">3. Compartilhamento de Dados</h2>
-            <p>
-                Não vendemos ou alugamos seus dados pessoais. Compartilhamos informações apenas com parceiros essenciais para a operação, como:
-            </p>
-            <ul className="list-disc list-inside mt-2 space-y-1">
-                <li>Transportadoras (para entrega dos produtos);</li>
-                <li>Gateways de pagamento (para processamento seguro das transações);</li>
-                <li>Plataformas de e-mail marketing (se inscrito).</li>
-            </ul>
-        </section>
+                    <section className="space-y-4">
+                        <h2 className="text-2xl font-black text-slate-900 uppercase italic tracking-tighter flex items-center gap-3">
+                            <span className="size-2 rounded-full bg-primary"></span>
+                            1. Coleta de Informações
+                        </h2>
+                        <p>
+                            Coletamos informações que você nos fornece diretamente, como quando cria uma conta, faz um pedido, assina nossa newsletter ou entra em contato conosco. No campo de dados, incluímos: nome, e-mail, de entrega, CPF e informações de tática financeira (pagamento).
+                        </p>
+                    </section>
 
-        <section>
-            <h2 className="text-xl font-bold text-white mb-4">4. Segurança</h2>
-            <p>
-                Adotamos medidas de segurança técnicas e administrativas para proteger seus dados contra acesso não autorizado, perda ou alteração. Utilizamos criptografia SSL (Secure Socket Layer) em todas as páginas do site.
-            </p>
-        </section>
+                    <section className="space-y-4">
+                        <h2 className="text-2xl font-black text-slate-900 uppercase italic tracking-tighter flex items-center gap-3">
+                            <span className="size-2 rounded-full bg-primary"></span>
+                            2. Uso das Informações
+                        </h2>
+                        <div className="grid md:grid-cols-2 gap-8">
+                            <div className="bg-slate-50 p-8 rounded-[2rem] border border-slate-100">
+                                <ul className="space-y-3">
+                                    {['Processar e entregar pedidos', 'Atualizar status da partida', 'Suporte ao cliente'].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-3 text-sm font-bold text-slate-600">
+                                            <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="bg-slate-50 p-8 rounded-[2rem] border border-slate-100">
+                                <ul className="space-y-3">
+                                    {['Marketing e promoções', 'Segurança do vestiário', 'Melhoria da experiência'].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-3 text-sm font-bold text-slate-600">
+                                            <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
 
-        <section>
-            <h2 className="text-xl font-bold text-white mb-4">5. Cookies</h2>
-            <p>
-                Utilizamos cookies para melhorar sua experiência de navegação, lembrar suas preferências e analisar o tráfego do site. Você pode gerenciar as preferências de cookies nas configurações do seu navegador.
-            </p>
-        </section>
+                    <section className="space-y-4">
+                        <h2 className="text-2xl font-black text-slate-900 uppercase italic tracking-tighter flex items-center gap-3">
+                            <span className="size-2 rounded-full bg-primary"></span>
+                            3. Compartilhamento de Dados
+                        </h2>
+                        <p>
+                            Não vendemos ou alugamos seus dados pessoais. Compartilhamos informações apenas com parceiros táticos essenciais para a operação, como transportadoras e gateways de pagamento certificados.
+                        </p>
+                    </section>
 
-        <section>
-            <h2 className="text-xl font-bold text-white mb-4">6. Seus Direitos</h2>
-            <p>
-                De acordo com a LGPD (Lei Geral de Proteção de Dados), você tem direito a solicitar o acesso, correção ou exclusão de seus dados pessoais a qualquer momento. Para exercer esses direitos, entre em contato através do nosso canal de Fale Conosco.
-            </p>
-        </section>
-      </div>
-    </div>
-  );
+                    <div className="grid md:grid-cols-2 gap-8 pt-12 border-t border-slate-100">
+                        <section className="space-y-4">
+                            <h2 className="text-xl font-black text-slate-900 uppercase italic tracking-tighter">4. Segurança Blindada</h2>
+                            <p className="text-sm">
+                                Adotamos medidas de segurança técnicas para proteger seus dados. Utilizamos criptografia SSL em 100% das páginas do site.
+                            </p>
+                        </section>
+
+                        <section className="space-y-4">
+                            <h2 className="text-xl font-black text-slate-900 uppercase italic tracking-tighter">5. Cookies de Campo</h2>
+                            <p className="text-sm">
+                                Utilizamos cookies para melhorar sua navegação e lembrar suas preferências. Você pode gerenciar os cookies no seu navegador.
+                            </p>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default Privacy;

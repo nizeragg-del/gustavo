@@ -75,59 +75,66 @@ const Cart: React.FC<CartProps> = ({ cart, setCurrentPage, isLoggedIn, onFinaliz
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in text-white">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-20 py-12 animate-fade-in text-slate-900 font-sans">
             {/* Stepper */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6">
-                <button onClick={() => setCurrentPage('HOME')} className="flex items-center gap-2 text-sm text-slate-400 hover:text-primary transition-colors">
-                    <span className="material-symbols-outlined text-sm">arrow_back</span> Continuar Comprando
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-8 pb-8 border-b border-slate-100">
+                <button onClick={() => setCurrentPage('HOME')} className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-primary transition-all italic">
+                    <span className="material-symbols-outlined text-sm">arrow_back</span> Voltar às compras
                 </button>
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-full bg-primary text-background-dark text-xs font-bold flex items-center justify-center">1</span>
-                        <span className="text-sm font-semibold text-white">Carrinho</span>
+                <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-primary text-white text-xs font-black flex items-center justify-center shadow-lg shadow-primary/20 italic">1</div>
+                        <span className="text-sm font-black text-slate-900 uppercase italic tracking-tighter">Carrinho</span>
                     </div>
-                    <div className="w-12 h-px bg-white/10"></div>
-                    <div className="flex items-center gap-2 opacity-40">
-                        <span className="w-6 h-6 rounded-full bg-white/20 text-white text-xs font-bold flex items-center justify-center">2</span>
-                        <span className="text-sm font-medium text-white">Envio</span>
+                    <div className="w-16 h-1 bg-slate-100 rounded-full"></div>
+                    <div className="flex items-center gap-3 opacity-30">
+                        <div className="w-8 h-8 rounded-xl bg-slate-200 text-slate-500 text-xs font-black flex items-center justify-center italic">2</div>
+                        <span className="text-sm font-black text-slate-900 uppercase italic tracking-tighter">Pagamento</span>
                     </div>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
                 {/* Items */}
                 <div className="lg:col-span-8">
-                    <h1 className="text-3xl font-bold mb-8">Seu Carrinho <span className="text-slate-500 font-normal">({cart.length} itens)</span></h1>
+                    <h1 className="text-4xl font-black mb-10 uppercase italic tracking-tighter">
+                        Carrinho <span className="text-primary ml-2">({cart.length})</span>
+                    </h1>
 
                     {cart.length === 0 ? (
-                        <div className="p-12 text-center border border-white/10 rounded-xl bg-white/5">
-                            <p className="text-white/60">Seu carrinho está vazio.</p>
+                        <div className="py-24 text-center border-2 border-dashed border-slate-100 rounded-[2rem] bg-slate-50/50">
+                            <div className="h-20 w-20 rounded-full bg-slate-100 flex items-center justify-center text-slate-300 mx-auto mb-6">
+                                <span className="material-symbols-outlined text-5xl">shopping_cart_off</span>
+                            </div>
+                            <p className="text-slate-500 font-bold text-lg">Seu carrinho está vazio.</p>
+                            <button onClick={() => setCurrentPage('HOME')} className="mt-8 bg-slate-900 text-white rounded-xl px-10 py-4 font-black text-sm uppercase italic tracking-tight hover:bg-primary transition-all shadow-xl">Explorar Lançamentos</button>
                         </div>
                     ) : (
-                        <div className="space-y-6">
+                        <div className="space-y-8">
                             {cart.map((item, idx) => (
-                                <div key={`${item.id}-${idx}`} className="bg-white/5 rounded-xl p-6 flex flex-col sm:flex-row gap-6 items-center border border-white/5 hover:border-white/10 transition-all">
-                                    <div className="bg-white/10 rounded-lg overflow-hidden w-full sm:w-32 aspect-square flex-shrink-0">
+                                <div key={`${item.id}-${idx}`} className="group bg-white rounded-[2rem] p-8 flex flex-col sm:flex-row gap-8 items-center border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500">
+                                    <div className="bg-slate-50 rounded-2xl overflow-hidden w-full sm:w-40 aspect-square flex-shrink-0 border border-slate-100 shadow-inner group-hover:scale-105 transition-transform duration-500">
                                         <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                     </div>
-                                    <div className="flex-grow w-full">
+                                    <div className="flex-grow w-full py-2">
                                         <div className="flex justify-between items-start">
                                             <div>
-                                                <h3 className="text-lg font-bold text-white">{item.name}</h3>
-                                                <p className="text-slate-400 text-sm mt-1">Tamanho: <span className="text-white">{item.size}</span></p>
+                                                <p className="text-primary text-[10px] font-black uppercase tracking-widest italic mb-1">{item.brand}</p>
+                                                <h3 className="text-2xl font-black text-slate-900 uppercase italic tracking-tighter leading-tight">{item.name}</h3>
+                                                <p className="text-slate-400 text-xs font-bold mt-2 uppercase tracking-widest">Tamanho: <span className="text-slate-900">{item.size}</span></p>
                                             </div>
-                                            <button className="text-slate-500 hover:text-red-400 transition-colors">
+                                            <button className="h-10 w-10 rounded-xl flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all border border-transparent hover:border-red-100">
                                                 <span className="material-symbols-outlined">delete</span>
                                             </button>
                                         </div>
-                                        <div className="flex justify-between items-end mt-6">
-                                            <div className="flex items-center bg-background-dark/50 rounded-lg p-1 border border-white/10">
-                                                <button className="w-8 h-8 flex items-center justify-center hover:text-primary transition-colors text-xl text-white">-</button>
-                                                <input type="text" value={item.quantity} readOnly className="w-10 bg-transparent text-center border-none focus:ring-0 text-sm font-bold text-white" />
-                                                <button className="w-8 h-8 flex items-center justify-center hover:text-primary transition-colors text-xl text-white">+</button>
+                                        <div className="flex justify-between items-end mt-10">
+                                            <div className="flex items-center bg-slate-50 rounded-xl px-2 h-12 border border-slate-200 shadow-inner">
+                                                <button className="h-8 w-8 rounded-lg hover:bg-white hover:text-primary transition-all text-slate-900 flex items-center justify-center active:scale-95 text-lg font-black">-</button>
+                                                <input type="text" value={item.quantity} readOnly className="w-10 bg-transparent text-center border-none focus:ring-0 text-sm font-black text-slate-900 italic" />
+                                                <button className="h-8 w-8 rounded-lg hover:bg-white hover:text-primary transition-all text-slate-900 flex items-center justify-center active:scale-95 text-lg font-black">+</button>
                                             </div>
                                             <div className="text-right">
-                                                <span className="text-primary text-xl font-bold">R$ {(item.price * item.quantity).toFixed(2)}</span>
+                                                <span className="text-primary text-3xl font-black italic tracking-tighter">R$ {(item.price * item.quantity).toFixed(2)}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -139,100 +146,100 @@ const Cart: React.FC<CartProps> = ({ cart, setCurrentPage, isLoggedIn, onFinaliz
 
                 {/* Summary */}
                 <div className="lg:col-span-4">
-                    <div className="bg-white/5 rounded-xl p-8 border border-white/10 sticky top-28">
-                        <h2 className="text-xl font-bold mb-6 text-white">Resumo do Pedido</h2>
-                        <div className="space-y-4 mb-8">
-                            <div className="flex justify-between text-slate-400">
+                    <div className="bg-slate-50 rounded-[2.5rem] p-10 border border-slate-100 sticky top-28 shadow-inner">
+                        <h2 className="text-2xl font-black mb-8 text-slate-900 uppercase italic tracking-tighter">Resumo</h2>
+                        <div className="space-y-5 mb-8">
+                            <div className="flex justify-between text-slate-500 font-bold uppercase tracking-tight text-xs">
                                 <span>Subtotal</span>
-                                <span className="text-white">R$ {subtotal.toFixed(2)}</span>
+                                <span className="text-slate-900">R$ {subtotal.toFixed(2)}</span>
                             </div>
-                            <div className="flex justify-between text-slate-400">
-                                <span>Frete</span>
-                                <span className={shippingCost === null ? "text-primary font-medium" : "text-white"}>
-                                    {shippingCost === null ? 'Calcular abaixo' : `R$ ${shippingCost.toFixed(2)}`}
+                            <div className="flex justify-between text-slate-500 font-bold uppercase tracking-tight text-xs">
+                                <span>Frete Estimado</span>
+                                <span className={shippingCost === null ? "text-primary italic" : "text-slate-900"}>
+                                    {shippingCost === null ? 'Pendente' : `R$ ${shippingCost.toFixed(2)}`}
                                 </span>
                             </div>
-                            <div className="pt-4 border-t border-white/10 flex justify-between items-end">
-                                <span className="text-lg font-bold text-white">Total</span>
+                            <div className="pt-6 border-t border-slate-200 flex justify-between items-end">
+                                <span className="text-sm font-black text-slate-900 uppercase italic tracking-tighter">Total</span>
                                 <div className="text-right">
-                                    <p className="text-2xl font-bold text-primary">R$ {total.toFixed(2)}</p>
-                                    <p className="text-xs text-slate-400 mt-1">ou 10x de R$ {(total / 10).toFixed(2)}</p>
+                                    <p className="text-4xl font-black text-slate-900 italic tracking-tighter">R$ {total.toFixed(2)}</p>
+                                    <p className="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-widest italic">Ou 10x de R$ {(total / 10).toFixed(2)}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="mb-6">
-                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Calcular Frete (CEP)</label>
+                        <div className="mb-8 p-6 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 italic">Cálculo de Entrega</label>
                             <div className="flex gap-2">
                                 <input
                                     type="text"
-                                    placeholder="00000-000"
+                                    placeholder="CEP"
                                     maxLength={8}
                                     value={cep}
                                     onChange={(e) => setCep(e.target.value.replace(/\D/g, ''))}
-                                    className="flex-grow bg-background-dark/50 border border-white/10 rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none font-bold text-white"
+                                    className="flex-grow bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none font-black text-slate-900 shadow-inner italic"
                                 />
                                 <button
                                     onClick={handleCalculateShipping}
-                                    className="bg-white/10 hover:bg-white/20 text-white px-4 rounded-lg text-sm font-bold transition-colors"
+                                    className="bg-slate-900 hover:bg-primary text-white px-6 rounded-xl text-[10px] font-black uppercase italic tracking-widest transition-all shadow-lg active:scale-95"
                                 >
                                     Calcular
                                 </button>
                             </div>
+                            {loadingShipping && <p className="text-[10px] text-primary mt-3 font-black uppercase italic animate-pulse">Calculando rota...</p>}
                         </div>
-                        {loadingShipping && <p className="text-xs text-primary mt-2">Calculando...</p>}
 
                         {/* Shipping Options List */}
                         {shippingOptions.length > 0 && (
-                            <div className="mt-4 space-y-2">
+                            <div className="mb-8 space-y-3">
                                 {shippingOptions.map((opt: any) => {
-                                    // Map Sandbox names to Real names
                                     let displayName = opt.name;
                                     if (displayName === '.Package') displayName = 'PAC (Econômico)';
                                     if (displayName === '.Com') displayName = 'SEDEX (Expresso)';
 
                                     return (
-                                        <label key={opt.id} className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${Number(opt.price) === shippingCost ? 'bg-primary/10 border-primary' : 'bg-background-dark/50 border-white/10 hover:border-white/30'}`}>
-                                            <div className="flex items-center gap-3">
+                                        <label key={opt.id} className={`flex items-center justify-between p-4 rounded-2xl border-2 cursor-pointer transition-all ${Number(opt.price) === shippingCost ? 'bg-primary/5 border-primary shadow-lg shadow-primary/10' : 'bg-white border-slate-100 hover:border-slate-300'}`}>
+                                            <div className="flex items-center gap-4">
                                                 <input
                                                     type="radio"
                                                     name="shipping"
                                                     checked={Number(opt.price) === shippingCost}
                                                     onChange={() => setShippingCost(Number(opt.price))}
-                                                    className="accent-primary"
+                                                    className="accent-primary h-5 w-5"
                                                 />
                                                 <div>
-                                                    <p className="font-bold text-sm text-white">{displayName}</p>
-                                                    <p className="text-xs text-slate-400">Chega em até {opt.delivery_time} dias</p>
+                                                    <p className="font-black text-sm text-slate-900 uppercase italic tracking-tighter">{displayName}</p>
+                                                    <p className="text-[10px] text-slate-400 font-bold uppercase">{opt.delivery_time} dias úteis</p>
                                                 </div>
                                             </div>
-                                            <span className="font-bold text-primary">R$ {Number(opt.price).toFixed(2)}</span>
+                                            <span className="font-black text-primary italic">R$ {Number(opt.price).toFixed(2)}</span>
                                         </label>
                                     )
                                 })}
                             </div>
                         )}
 
-                        <div className="mb-8">
-                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Cupom</label>
+                        <div className="mb-10">
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 italic">Cupom de Desconto</label>
                             <div className="flex gap-2">
-                                <input type="text" placeholder="CÓDIGO" className="flex-grow bg-background-dark/50 border border-white/10 rounded-lg px-4 py-3 text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none uppercase font-bold text-white" />
-                                <button className="bg-white/10 hover:bg-white/20 text-white px-4 rounded-lg text-sm font-bold transition-colors">Aplicar</button>
+                                <input type="text" placeholder="INSIRA O CÓDIGO" className="flex-grow bg-white border border-slate-200 rounded-xl px-4 py-4 text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none uppercase font-black text-slate-900 shadow-inner italic" />
+                                <button className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 rounded-xl text-[10px] font-black uppercase italic tracking-widest transition-all active:scale-95">Aplicar</button>
                             </div>
                         </div>
 
                         <button
                             onClick={onFinalize}
-                            className="w-full bg-primary hover:bg-primary/90 text-background-dark font-black py-4 rounded-lg flex items-center justify-center gap-3 transition-all hover:scale-[1.02] shadow-lg shadow-primary/20 mb-6"
+                            className="w-full bg-primary hover:bg-primary-dark text-white font-black py-5 rounded-2xl flex items-center justify-center gap-4 transition-all hover:scale-[1.02] shadow-2xl shadow-primary/30 mb-8 uppercase italic tracking-tighter text-xl"
                         >
-                            FINALIZAR COMPRA
-                            <span className="material-symbols-outlined font-bold">arrow_forward</span>
+                            Finalizar Pedido
+                            <span className="material-symbols-outlined font-black">sports_score</span>
                         </button>
 
-                        <p className="text-[10px] text-slate-500 flex items-center justify-center gap-2">
-                            <span className="material-symbols-outlined text-sm text-primary">lock</span>
-                            Ambiente 100% seguro
-                        </p>
+                        <div className="flex items-center justify-center gap-6 opacity-40">
+                            <span className="material-symbols-outlined text-4xl">payments</span>
+                            <span className="material-symbols-outlined text-4xl">lock</span>
+                            <span className="material-symbols-outlined text-4xl">verified</span>
+                        </div>
                     </div>
                 </div>
             </div>

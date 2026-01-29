@@ -144,61 +144,59 @@ const Home: React.FC<HomeProps> = ({ products, banners, onProductClick, onAddToC
           ))}
         </div>
 
-        {/* Carousel Controls - Just indicators now */}
-        <div className="absolute bottom-10 left-6 md:left-16 lg:left-40 flex items-center gap-6 z-20">
-          <div className="flex gap-2">
-            {banners.map((_, i) => (
-              <button
-                key={i}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentBanner(i);
-                }}
-                className={`h-1.5 transition-all duration-300 rounded-full ${i === currentBanner ? 'w-12 bg-primary' : 'w-4 bg-white/20 hover:bg-white/40'}`}
-              />
-            ))}
-          </div>
+        {/* Carousel Indicators - Centered */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2 z-20">
+          {banners.map((_, i) => (
+            <button
+              key={i}
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentBanner(i);
+              }}
+              className={`h-1.5 transition-all duration-300 rounded-full ${i === currentBanner ? 'w-12 bg-primary' : 'w-4 bg-white/40 hover:bg-white/60'}`}
+            />
+          ))}
         </div>
       </section>
 
       {/* Value Proposition */}
-      <section className="px-4 md:px-10 lg:px-40 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="px-4 md:px-10 lg:px-40 py-16 bg-surface">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Card 1 */}
-          <div className="group relative p-6 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 transition-all duration-300 hover:border-primary/50 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(43,238,121,0.1)]">
-            <div className="flex items-center gap-5">
-              <div className="h-14 w-14 rounded-xl bg-background-dark border border-white/10 flex items-center justify-center text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-background-dark group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(43,238,121,0.4)] shadow-inner">
-                <span className="material-symbols-outlined text-3xl">bolt</span>
+          <div className="group relative p-8 rounded-2xl bg-white border border-slate-100 transition-all duration-300 hover:border-primary hover:-translate-y-1 hover:shadow-xl shadow-sm">
+            <div className="flex flex-col items-center text-center gap-4">
+              <div className="h-16 w-16 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white shadow-inner">
+                <span className="material-symbols-outlined text-4xl">bolt</span>
               </div>
               <div>
-                <h3 className="font-bold text-lg text-white group-hover:text-primary transition-colors">Entrega Veloz</h3>
-                <p className="text-white/50 text-sm mt-1 group-hover:text-white/80 transition-colors">Receba em tempo recorde.</p>
+                <h3 className="font-bold text-xl text-slate-900 group-hover:text-primary transition-colors uppercase tracking-tight">Entrega Veloz</h3>
+                <p className="text-slate-500 text-sm mt-2 leading-relaxed">Logística de ponta para você receber seu manto em tempo recorde.</p>
               </div>
             </div>
           </div>
 
           {/* Card 2 */}
-          <div className="group relative p-6 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 transition-all duration-300 hover:border-primary/50 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(43,238,121,0.1)]">
-            <div className="flex items-center gap-5">
-              <div className="h-14 w-14 rounded-xl bg-background-dark border border-white/10 flex items-center justify-center text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-background-dark group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(43,238,121,0.4)] shadow-inner">
-                <span className="material-symbols-outlined text-3xl">verified</span>
+          <div className="group relative p-8 rounded-2xl bg-white border border-slate-100 transition-all duration-300 hover:border-primary hover:-translate-y-1 hover:shadow-xl shadow-sm">
+            <div className="flex flex-col items-center text-center gap-4">
+              <div className="h-16 w-16 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white shadow-inner">
+                <span className="material-symbols-outlined text-4xl">verified</span>
               </div>
               <div>
-                <h3 className="font-bold text-lg text-white group-hover:text-primary transition-colors">Qualidade Elite</h3>
-                <p className="text-white/50 text-sm mt-1 group-hover:text-white/80 transition-colors">Tecido tecnológico oficial.</p>
+                <h3 className="font-bold text-xl text-slate-900 group-hover:text-primary transition-colors uppercase tracking-tight">Qualidade Elite</h3>
+                <p className="text-slate-500 text-sm mt-2 leading-relaxed">Tecido tecnológico oficial com acabamento premium de torcedor.</p>
               </div>
             </div>
           </div>
 
           {/* Card 3 */}
-          <div className="group relative p-6 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 transition-all duration-300 hover:border-primary/50 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(43,238,121,0.1)]">
-            <div className="flex items-center gap-5">
-              <div className="h-14 w-14 rounded-xl bg-background-dark border border-white/10 flex items-center justify-center text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-background-dark group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(43,238,121,0.4)] shadow-inner">
-                <span className="material-symbols-outlined text-3xl">lock</span>
+          <div className="group relative p-8 rounded-2xl bg-white border border-slate-100 transition-all duration-300 hover:border-primary hover:-translate-y-1 hover:shadow-xl shadow-sm">
+            <div className="flex flex-col items-center text-center gap-4">
+              <div className="h-16 w-16 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white shadow-inner">
+                <span className="material-symbols-outlined text-4xl">lock</span>
               </div>
               <div>
-                <h3 className="font-bold text-lg text-white group-hover:text-primary transition-colors">Compra Blindada</h3>
-                <p className="text-white/50 text-sm mt-1 group-hover:text-white/80 transition-colors">Segurança total nos dados.</p>
+                <h3 className="font-bold text-xl text-slate-900 group-hover:text-primary transition-colors uppercase tracking-tight">Compra Blindada</h3>
+                <p className="text-slate-500 text-sm mt-2 leading-relaxed">Segurança total e criptografia de ponta a ponta nos seus dados.</p>
               </div>
             </div>
           </div>
@@ -206,17 +204,18 @@ const Home: React.FC<HomeProps> = ({ products, banners, onProductClick, onAddToC
       </section>
 
       {/* Lançamentos */}
-      <section className="px-4 md:px-10 lg:px-40 py-8">
-        <div className="flex justify-between items-end mb-8">
-          <div>
-            <h2 className="text-white text-3xl font-bold tracking-tight">Lançamentos</h2>
-            <p className="text-white/40">As novidades mais quentes dos gramados</p>
+      <section className="px-4 md:px-10 lg:px-40 py-20 bg-white">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 gap-4">
+          <div className="text-center md:text-left">
+            <h2 className="text-slate-900 text-4xl font-black tracking-tight uppercase italic">Lançamentos</h2>
+            <div className="h-1 w-20 bg-primary mt-2 mx-auto md:mx-0"></div>
+            <p className="text-slate-500 mt-4 font-medium">As novidades mais quentes que acabaram de chegar</p>
           </div>
-          <button onClick={() => onNavigate('CATEGORIES')} className="text-primary font-semibold flex items-center gap-2 hover:underline">
-            Ver todos <span className="material-symbols-outlined">trending_flat</span>
+          <button onClick={() => onNavigate('CATEGORIES')} className="bg-slate-900 text-white rounded-full px-8 py-3 font-bold flex items-center gap-2 hover:bg-primary transition-all shadow-lg text-sm uppercase tracking-tighter">
+            Ver catálogo completo <span className="material-symbols-outlined">trending_flat</span>
           </button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-14">
           {featuredProducts.map(product => (
             <ProductCard
               key={product.id}
@@ -229,35 +228,35 @@ const Home: React.FC<HomeProps> = ({ products, banners, onProductClick, onAddToC
       </section>
 
       {/* Featured Banner */}
-      <section className="px-4 md:px-10 lg:px-40 py-16">
-        <div className="relative overflow-hidden rounded-2xl bg-[#193324] p-8 md:p-16">
-          <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at center, #2bee79 0%, transparent 70%)' }}></div>
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
-            <div className="w-full md:w-1/2 flex flex-col gap-6">
-              <span className="text-gold font-bold flex items-center gap-2">
-                <span className="material-symbols-outlined">star</span> EDIÇÃO ESPECIAL
+      <section className="px-4 md:px-10 lg:px-40 py-16 bg-surface">
+        <div className="relative overflow-hidden rounded-[2rem] bg-slate-900 p-8 md:p-20 shadow-2xl">
+          <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at center, #10b981 0%, transparent 70%)' }}></div>
+          <div className="relative z-10 flex flex-col lg:flex-row items-center gap-16">
+            <div className="w-full lg:w-1/2 flex flex-col gap-8">
+              <span className="text-primary font-black flex items-center gap-3 tracking-widest text-xs">
+                <span className="h-px w-8 bg-primary"></span> EDIÇÃO ESPECIAL
               </span>
-              <h2 className="text-white text-4xl md:text-5xl font-black leading-tight uppercase">
+              <h2 className="text-white text-5xl md:text-7xl font-black leading-[0.9] uppercase italic tracking-tighter">
                 Hala Madrid: <br />O Legado Continua
               </h2>
-              <p className="text-white/70 text-lg">
-                A nova armadura dos Merengues chegou para dominar a Europa. Sinta a grandeza do maior clube do mundo com acabamento em ouro e tecnologia Heat.Dry.
+              <p className="text-slate-400 text-lg md:text-xl font-medium leading-relaxed max-w-lg">
+                Sinta a grandeza do maior clube do mundo com acabamento em ouro e tecnologia Heat.Dry elite.
               </p>
-              <div className="flex flex-wrap gap-4">
-                <button onClick={() => onNavigate('PRODUCT')} className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-lg h-12 px-6 bg-primary text-background-dark font-bold hover:scale-105 transition-transform">
+              <div className="flex flex-wrap gap-4 mt-4">
+                <button onClick={() => onNavigate('PRODUCT')} className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-xl h-14 px-8 bg-primary text-white font-black hover:scale-105 transition-all shadow-[0_10px_30px_-10px_rgba(16,185,129,0.5)] uppercase italic tracking-tight">
                   Explorar Coleção
                 </button>
-                <button className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-lg h-12 px-6 border border-white/20 text-white font-bold hover:bg-white/10">
+                <button className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-xl h-14 px-8 border-2 border-slate-700 text-white font-black hover:bg-slate-800 transition-all uppercase italic tracking-tight">
                   Ver História
                 </button>
               </div>
             </div>
-            <div className="w-full md:w-1/2 grid grid-cols-2 gap-4">
-              <div className="aspect-square bg-white/10 rounded-xl overflow-hidden">
-                <img alt="Detail 1" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgagiebZvvsGuHlqepd9ruT65eMDJ9XF4kmA-lnh918KdQialkpfRASrft_7Nm0-lLSggnnOii_LSh4oHU9Cmv-5nOW1-n5nw5PsFV5hrfH1uul59FUr8uHJvoOCn0RCZi0t4tKE-DmiL61z7PoQhoAruzu1rizh04E05eTyg3jT7mrZRmVX1Bs9TyjNdI1snPV-IMfVBgvNt8STfUGG8SkGKLOgLZq-va1QxYVAgNBUnURX5uDu3DHyMkbr0_R1Qd04CMMihf8w" />
+            <div className="w-full lg:w-1/2 grid grid-cols-2 gap-6">
+              <div className="aspect-[4/5] bg-white/5 rounded-3xl overflow-hidden shadow-2xl transform -rotate-3 hover:rotate-0 transition-all duration-700 border border-white/10">
+                <img alt="Detail 1" className="w-full h-full object-cover hover:scale-110 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgagiebZvvsGuHlqepd9ruT65eMDJ9XF4kmA-lnh918KdQialkpfRASrft_7Nm0-lLSggnnOii_LSh4oHU9Cmv-5nOW1-n5nw5PsFV5hrfH1uul59FUr8uHJvoOCn0RCZi0t4tKE-DmiL61z7PoQhoAruzu1rizh04E05eTyg3jT7mrZRmVX1Bs9TyjNdI1snPV-IMfVBgvNt8STfUGG8SkGKLOgLZq-va1QxYVAgNBUnURX5uDu3DHyMkbr0_R1Qd04CMMihf8w" />
               </div>
-              <div className="aspect-square bg-white/10 rounded-xl overflow-hidden mt-8">
-                <img alt="Detail 2" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLUwLkiWEfhm7A_2l-nVsaS63u7_UMXBiNbxDcDQM_NbZjzUkMctXellWrSQ2c5nr3wmpNiv1ZBJNyWhX3v30tCgfve9N8-12X1RtBGquHSOm2R_sh7cFo43Ml8S5rRbPo8hWni08q9tw207-_vRFTrEK6AMYCLanuMJZekNXbbkhXonO1VfYlkXndiN36yWpp8ZLtkGjjo5P1ONjm6ShN97yPjPRZNf4ISjEalDf4LqYy0MyQO08kUlc6MJTK5UFArRpv423YIA" />
+              <div className="aspect-[4/5] bg-white/5 rounded-3xl overflow-hidden mt-12 shadow-2xl transform rotate-3 hover:rotate-0 transition-all duration-700 border border-white/10">
+                <img alt="Detail 2" className="w-full h-full object-cover hover:scale-110 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLUwLkiWEfhm7A_2l-nVsaS63u7_UMXBiNbxDcDQM_NbZjzUkMctXellWrSQ2c5nr3wmpNiv1ZBJNyWhX3v30tCgfve9N8-12X1RtBGquHSOm2R_sh7cFo43Ml8S5rRbPo8hWni08q9tw207-_vRFTrEK6AMYCLanuMJZekNXbbkhXonO1VfYlkXndiN36yWpp8ZLtkGjjo5P1ONjm6ShN97yPjPRZNf4ISjEalDf4LqYy0MyQO08kUlc6MJTK5UFArRpv423YIA" />
               </div>
             </div>
           </div>
@@ -265,15 +264,18 @@ const Home: React.FC<HomeProps> = ({ products, banners, onProductClick, onAddToC
       </section>
 
       {/* Newsletter */}
-      <section className="px-4 md:px-10 lg:px-40 py-20 bg-primary/5 border-y border-white/5">
-        <div className="max-w-3xl mx-auto text-center flex flex-col gap-8">
-          <h2 className="text-3xl md:text-4xl font-black text-white uppercase italic">Faça parte do time</h2>
-          <p className="text-white/60 text-lg">Inscreva-se para receber avisos de lançamentos exclusivos, promoções relâmpago e conteúdos de futebol.</p>
-          <form className="flex flex-col md:flex-row gap-3" onSubmit={(e) => e.preventDefault()}>
-            <input className="flex-1 bg-white/5 border border-white/10 rounded-lg h-14 px-6 focus:ring-primary focus:border-primary text-white outline-none" placeholder="Seu melhor e-mail" type="email" />
-            <button className="bg-primary text-background-dark font-black h-14 px-10 rounded-lg uppercase tracking-widest hover:bg-primary/90 transition-all">Assinar</button>
+      <section className="px-4 md:px-10 lg:px-40 py-24 bg-white border-y border-slate-100 overflow-hidden relative">
+        <div className="absolute -top-24 -right-24 h-64 w-64 bg-primary/5 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-24 -left-24 h-64 w-64 bg-primary/5 rounded-full blur-3xl"></div>
+
+        <div className="max-w-3xl mx-auto text-center flex flex-col gap-8 relative z-10">
+          <h2 className="text-4xl md:text-5xl font-black text-slate-900 uppercase italic tracking-tighter">Faça parte do time</h2>
+          <p className="text-slate-500 text-lg md:text-xl font-medium">Inscreva-se para receber avisos de lançamentos exclusivos, promoções relâmpago e conteúdos de futebol.</p>
+          <form className="flex flex-col md:flex-row gap-4 mt-4" onSubmit={(e) => e.preventDefault()}>
+            <input className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl h-16 px-8 focus:ring-2 focus:ring-primary focus:border-primary text-slate-900 outline-none font-medium shadow-inner" placeholder="Seu melhor e-mail" type="email" />
+            <button className="bg-slate-900 text-white font-black h-16 px-12 rounded-2xl uppercase italic tracking-tight hover:bg-primary transition-all shadow-xl">Assinar</button>
           </form>
-          <p className="text-xs text-white/30 italic">Ao assinar, você concorda com nossos termos e política de privacidade.</p>
+          <p className="text-xs text-slate-400 italic">Ao assinar, você concorda com nossos termos e política de privacidade.</p>
         </div>
       </section>
     </div>

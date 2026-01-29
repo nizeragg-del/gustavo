@@ -27,7 +27,7 @@ const Layout: React.FC<{
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background-dark text-white flex flex-col font-display">
+    <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans">
       <Header
         currentPage={location.pathname === '/' ? 'HOME' : location.pathname.substring(1).toUpperCase()}
         setCurrentPage={(page) => {
@@ -312,7 +312,7 @@ const AppContent: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background-dark text-white flex items-center justify-center">
+      <div className="min-h-screen bg-white text-slate-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary"></div>
       </div>
     );

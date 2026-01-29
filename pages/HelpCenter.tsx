@@ -27,39 +27,49 @@ const HelpCenter: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-16 animate-fade-in text-white">
-      <div className="text-center mb-16 space-y-4">
-        <h1 className="text-4xl md:text-5xl font-black tracking-tight">Central de Ajuda</h1>
-        <p className="text-white/60 text-lg">Como podemos te ajudar hoje?</p>
-        <div className="max-w-xl mx-auto relative mt-8">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/40">search</span>
-            <input 
-                type="text" 
-                placeholder="Busque por dúvidas (ex: entrega, troca, tamanho)" 
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:border-primary outline-none transition-colors"
-            />
+    <div className="max-w-[1440px] mx-auto px-6 py-20 animate-fade-in text-slate-900 font-sans">
+      <div className="text-center mb-20 space-y-8">
+        <h1 className="text-5xl md:text-7xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">
+          Central de Ajuda
+        </h1>
+        <p className="text-slate-500 text-lg font-medium leading-relaxed max-w-xl mx-auto">
+          Precisa de uma assistência tática? Encontre as respostas para as dúvidas mais comuns do campo.
+        </p>
+        <div className="max-w-2xl mx-auto relative mt-12">
+          <span className="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 font-black">search</span>
+          <input
+            type="text"
+            placeholder="Busque por dúvidas (ex: entrega, troca, tamanho)"
+            className="w-full bg-slate-50 border border-slate-100 rounded-[2rem] py-6 pl-16 pr-8 text-slate-900 font-black italic focus:border-primary outline-none transition-all shadow-xl shadow-slate-200/50 placeholder:text-slate-300"
+          />
         </div>
       </div>
 
-      <div className="space-y-12">
+      <div className="space-y-16 max-w-4xl mx-auto">
         {faqs.map((section, idx) => (
-          <div key={idx}>
-            <h2 className="text-2xl font-bold mb-6 text-primary flex items-center gap-2">
-                <span className="material-symbols-outlined">
-                    {section.category === "Pedidos e Entrega" ? "local_shipping" : 
-                     section.category === "Produtos e Qualidade" ? "verified" : "payments"}
+          <div key={idx} className="animate-fade-in" style={{ animationDelay: `${idx * 150}ms` }}>
+            <h2 className="text-2xl font-black text-slate-900 uppercase italic tracking-tighter mb-8 flex items-center gap-4">
+              <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border-2 border-primary/20 shadow-inner">
+                <span className="material-symbols-outlined font-black">
+                  {section.category === "Pedidos e Entrega" ? "local_shipping" :
+                    section.category === "Produtos e Qualidade" ? "verified" : "payments"}
                 </span>
-                {section.category}
+              </div>
+              {section.category}
             </h2>
             <div className="space-y-4">
               {section.questions.map((item, qIdx) => (
-                <details key={qIdx} className="group bg-white/5 border border-white/10 rounded-xl overflow-hidden transition-all duration-300 open:bg-white/10 open:border-white/20">
-                  <summary className="flex items-center justify-between p-6 cursor-pointer font-bold text-lg select-none hover:text-primary transition-colors">
-                    {item.q}
-                    <span className="material-symbols-outlined transition-transform duration-300 group-open:rotate-180">expand_more</span>
+                <details key={qIdx} className="group bg-white border border-slate-100 rounded-[2rem] overflow-hidden transition-all duration-500 hover:border-slate-300 shadow-lg shadow-slate-200/30 open:shadow-2xl open:shadow-primary/5 open:border-primary/20">
+                  <summary className="flex items-center justify-between p-8 cursor-pointer font-black text-lg text-slate-900 uppercase italic tracking-tight select-none hover:text-primary transition-colors">
+                    <span className="flex-1 pr-6">{item.q}</span>
+                    <div className="size-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-open:bg-primary group-open:text-white transition-all duration-500 shadow-inner">
+                      <span className="material-symbols-outlined transition-transform duration-500 group-open:rotate-180">expand_more</span>
+                    </div>
                   </summary>
-                  <div className="px-6 pb-6 text-white/70 leading-relaxed border-t border-white/5 pt-4">
-                    {item.a}
+                  <div className="px-8 pb-8 text-slate-500 font-medium leading-relaxed animate-slide-down">
+                    <div className="pt-6 border-t border-slate-50">
+                      {item.a}
+                    </div>
                   </div>
                 </details>
               ))}
@@ -68,13 +78,14 @@ const HelpCenter: React.FC = () => {
         ))}
       </div>
 
-      <div className="mt-20 p-8 bg-primary/10 border border-primary/20 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6">
-        <div>
-            <h3 className="text-xl font-bold text-white">Ainda tem dúvidas?</h3>
-            <p className="text-white/60">Nossa equipe de suporte está pronta para te atender.</p>
+      <div className="mt-24 p-12 bg-white border border-slate-100 rounded-[3.5rem] flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl shadow-slate-200/50 relative overflow-hidden">
+        <div className="absolute top-0 right-0 size-64 bg-primary/5 rounded-full -mr-32 -mt-32"></div>
+        <div className="relative">
+          <h3 className="text-3xl font-black text-slate-900 uppercase italic tracking-tighter mb-2">Ainda na dúvida?</h3>
+          <p className="text-slate-500 text-lg font-medium">Nossa equipe de suporte está pronta para te atender.</p>
         </div>
-        <button className="bg-primary text-background-dark font-black px-8 py-3 rounded-lg hover:opacity-90 transition-opacity">
-            Falar com Atendente
+        <button className="bg-primary hover:bg-primary-dark text-white font-black px-12 py-5 rounded-[2rem] uppercase tracking-[0.2em] italic shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95 relative">
+          Falar com Atendente
         </button>
       </div>
     </div>

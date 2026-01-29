@@ -318,7 +318,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
 
     if (loading) {
         return (
-            <div className="flex h-screen items-center justify-center bg-background-dark text-white">
+            <div className="flex h-screen items-center justify-center bg-white text-slate-900">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary"></div>
             </div>
         );
@@ -326,58 +326,62 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
 
     if (!user) {
         return (
-            <div className="flex h-screen items-center justify-center bg-background-dark p-4 font-display">
-                <div className="bg-[#112218]/50 border border-[#326747] rounded-2xl p-8 max-w-md w-full animate-scale-in">
-                    <div className="flex flex-col items-center gap-4 mb-8">
-                        <span className="material-symbols-outlined text-primary text-6xl">admin_panel_settings</span>
-                        <h2 className="text-2xl font-black uppercase text-white tracking-widest text-center">Acesso Restrito</h2>
-                        <p className="text-[#92c9a8] text-sm text-center">Entre com suas credenciais de administrador.</p>
+            <div className="flex h-screen items-center justify-center bg-slate-50 p-4 font-sans">
+                <div className="bg-white border border-slate-100 rounded-[2.5rem] p-12 max-w-md w-full shadow-2xl shadow-slate-200/50 animate-scale-in">
+                    <div className="flex flex-col items-center gap-6 mb-10">
+                        <div className="size-20 rounded-3xl bg-primary/10 flex items-center justify-center text-primary border-2 border-primary/20 shadow-inner">
+                            <span className="material-symbols-outlined text-4xl font-black">admin_panel_settings</span>
+                        </div>
+                        <div className="text-center">
+                            <h2 className="text-3xl font-black uppercase text-slate-900 tracking-tighter italic italic">Área Administrativa</h2>
+                            <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mt-2 italic">Acesso restrito ao comando da Arena</p>
+                        </div>
                     </div>
 
                     <form className="space-y-6" onSubmit={handleLogin}>
                         <div>
-                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">E-mail</label>
+                            <label className="block text-[10px] font-black uppercase text-slate-400 mb-2 italic tracking-widest pl-1">Identificação</label>
                             <input
                                 type="email"
                                 required
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
-                                className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-4 py-4 text-white focus:border-primary outline-none transition-colors"
+                                className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-5 text-slate-900 focus:border-primary outline-none transition-all placeholder:text-slate-300 font-bold"
                                 placeholder="admin@arenagolaco.com"
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Senha</label>
+                            <label className="block text-[10px] font-black uppercase text-slate-400 mb-2 italic tracking-widest pl-1">Chave de Acesso</label>
                             <input
                                 type="password"
                                 required
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
-                                className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-4 py-4 text-white focus:border-primary outline-none transition-colors"
+                                className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-5 text-slate-900 focus:border-primary outline-none transition-all placeholder:text-slate-300 font-bold"
                                 placeholder="********"
                             />
                         </div>
 
                         {authError && (
-                            <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 flex items-center gap-3">
-                                <span className="material-symbols-outlined text-red-500 text-sm">error</span>
-                                <p className="text-red-500 text-xs font-bold uppercase">{authError}</p>
+                            <div className="bg-red-50 border border-red-100 rounded-xl p-4 flex items-center gap-3 animate-shake">
+                                <span className="material-symbols-outlined text-red-500 text-sm font-black">error</span>
+                                <p className="text-red-600 text-[10px] font-black uppercase italic">{authError}</p>
                             </div>
                         )}
 
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-primary hover:bg-primary/90 disabled:opacity-50 text-background-dark font-black py-5 rounded-xl transition-all uppercase tracking-tighter"
+                            className="w-full bg-primary hover:bg-primary-dark disabled:opacity-50 text-white font-black py-6 rounded-2xl transition-all uppercase tracking-[0.2em] italic shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98]"
                         >
-                            {loading ? 'AUTENTICANDO...' : 'ENTRAR NO PAINEL'}
+                            {loading ? 'Validando...' : 'Assumir Comando'}
                         </button>
                     </form>
 
-                    <div className="mt-8 pt-6 border-t border-[#326747] text-center">
-                        <button onClick={onNavigateHome} className="text-[#92c9a8] text-sm font-bold hover:text-white transition-colors flex items-center justify-center gap-2 mx-auto">
-                            <span className="material-symbols-outlined text-sm">arrow_back</span>
-                            Voltar para a Loja
+                    <div className="mt-10 pt-8 border-t border-slate-50 text-center">
+                        <button onClick={onNavigateHome} className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] italic hover:text-primary transition-colors flex items-center justify-center gap-3 mx-auto">
+                            <span className="material-symbols-outlined text-sm font-black">arrow_back</span>
+                            Retornar ao Campo
                         </button>
                     </div>
                 </div>
@@ -385,168 +389,179 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
         );
     }
     return (
-        <div className="flex h-screen overflow-hidden bg-background-dark text-white font-display">
+        <div className="flex h-screen overflow-hidden bg-white text-slate-900 font-sans">
             {/* Sidebar */}
-            <aside className="w-64 flex-shrink-0 border-r border-[#234832] bg-[#112218] flex flex-col justify-between p-4">
-                <div className="flex flex-col gap-8">
-                    <div className="flex gap-3 items-center px-2">
-                        <div className="bg-primary/20 p-2 rounded-lg flex items-center justify-center">
-                            <span className="material-symbols-outlined text-primary text-2xl">sports_soccer</span>
+            <aside className="w-80 flex-shrink-0 border-r border-slate-100 bg-white flex flex-col justify-between p-8">
+                <div className="flex flex-col gap-12">
+                    <div className="flex gap-4 items-center">
+                        <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center border-2 border-primary/20 text-primary shadow-inner">
+                            <span className="material-symbols-outlined text-2xl font-black">sports_soccer</span>
                         </div>
                         <div className="flex flex-col">
-                            <h1 className="text-white text-base font-bold leading-none tracking-tight">Arena Golaço</h1>
+                            <h1 className="text-slate-900 text-xl font-black uppercase italic tracking-tighter leading-none">Arena Golaço</h1>
+                            <p className="text-[10px] font-black text-primary uppercase tracking-widest mt-1 italic">Admin Dashboard</p>
                         </div>
                     </div>
-                    <nav className="flex flex-col gap-2">
-                        <button onClick={() => setActiveTab('DASHBOARD')} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition-all ${activeTab === 'DASHBOARD' ? 'bg-primary text-background-dark' : 'text-[#92c9a8] hover:bg-[#234832] hover:text-white'}`}>
-                            <span className="material-symbols-outlined fill-1">dashboard</span>
-                            <p className="text-sm">Painel</p>
-                        </button>
-                        <button onClick={() => setActiveTab('PRODUCTS')} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition-all ${activeTab === 'PRODUCTS' ? 'bg-primary text-background-dark' : 'text-[#92c9a8] hover:bg-[#234832] hover:text-white'}`}>
-                            <span className="material-symbols-outlined">apparel</span>
-                            <p className="text-sm">Produtos</p>
-                        </button>
-                        <button onClick={() => setActiveTab('ORDERS')} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition-all ${activeTab === 'ORDERS' ? 'bg-primary text-background-dark' : 'text-[#92c9a8] hover:bg-[#234832] hover:text-white'}`}>
-                            <span className="material-symbols-outlined">receipt_long</span>
-                            <p className="text-sm">Pedidos</p>
-                        </button>
-                        <button onClick={() => setActiveTab('CLIENTS')} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition-all ${activeTab === 'CLIENTS' ? 'bg-primary text-background-dark' : 'text-[#92c9a8] hover:bg-[#234832] hover:text-white'}`}>
-                            <span className="material-symbols-outlined">group</span>
-                            <p className="text-sm">Clientes</p>
-                        </button>
-                        <button onClick={() => setActiveTab('BANNERS')} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition-all ${activeTab === 'BANNERS' ? 'bg-primary text-background-dark' : 'text-[#92c9a8] hover:bg-[#234832] hover:text-white'}`}>
-                            <span className="material-symbols-outlined">view_carousel</span>
-                            <p className="text-sm">Hero / Banners</p>
-                        </button>
+                    <nav className="flex flex-col gap-3">
+                        {[
+                            { id: 'DASHBOARD', label: 'Painel', icon: 'dashboard' },
+                            { id: 'PRODUCTS', label: 'Produtos', icon: 'apparel' },
+                            { id: 'ORDERS', label: 'Pedidos', icon: 'receipt_long' },
+                            { id: 'CLIENTS', label: 'Clientes', icon: 'group' },
+                            { id: 'BANNERS', label: 'Hero / Banners', icon: 'view_carousel' },
+                        ].map(item => (
+                            <button
+                                key={item.id}
+                                onClick={() => setActiveTab(item.id as any)}
+                                className={`flex items-center gap-5 px-6 py-4 rounded-2xl font-black uppercase italic text-xs tracking-widest transition-all ${activeTab === item.id ? 'bg-primary text-white shadow-lg shadow-primary/20 translate-x-1' : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900'}`}
+                            >
+                                <span className="material-symbols-outlined font-black text-xl">{item.icon}</span>
+                                {item.label}
+                            </button>
+                        ))}
                     </nav>
                 </div>
-                <div className="flex flex-col gap-4 mt-12">
-                    <button onClick={() => setActiveTab('ADD_PRODUCT')} className="flex w-full cursor-pointer items-center justify-center rounded-lg h-11 bg-primary text-background-dark text-sm font-bold tracking-tight hover:opacity-90 transition-opacity">
-                        <span className="material-symbols-outlined mr-2 text-lg">add_circle</span> Novo Produto
+
+                <div className="space-y-6">
+                    <button onClick={() => setActiveTab('ADD_PRODUCT')} className="flex w-full cursor-pointer items-center justify-center rounded-2xl h-14 bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] italic hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10 hover:scale-[1.02]">
+                        <span className="material-symbols-outlined mr-3 text-lg font-black">add_circle</span> Novo Produto
                     </button>
-                </div>
-                <div className="mt-auto p-4 border-t border-[#234832] space-y-2">
-                    <button onClick={onNavigateHome} className="flex w-full items-center gap-4 px-4 py-3 rounded-xl text-[#92c9a8] hover:bg-[#234832] hover:text-white transition-colors font-bold text-sm uppercase">
-                        <span className="material-symbols-outlined">arrow_back</span>
-                        Voltar ao Site
+
+                    <button onClick={onNavigateHome} className="flex w-full items-center gap-5 px-6 py-4 rounded-2xl text-slate-400 hover:bg-slate-50 hover:text-slate-900 transition-all font-black text-[10px] uppercase italic tracking-[0.2em]">
+                        <span className="material-symbols-outlined font-black text-lg">arrow_back</span>
+                        Sair do Painel
                     </button>
                 </div>
             </aside >
 
             {/* Content */}
-            < main className="flex-1 flex flex-col overflow-hidden bg-background-dark" >
-                <header className="h-16 flex items-center justify-between border-b border-[#234832] bg-[#112218] px-8 shrink-0">
-                    <h2 className="text-white text-lg font-bold tracking-tight uppercase">
+            <main className="flex-1 flex flex-col overflow-hidden bg-slate-50" >
+                <header className="h-24 flex items-center justify-between bg-white border-b border-slate-100 px-10 shrink-0">
+                    <h2 className="text-slate-900 text-2xl font-black uppercase italic tracking-tighter">
                         {activeTab === 'ADD_PRODUCT' ? (editingId ? 'Editar Produto' : 'Adicionar Produto') : activeTab === 'DASHBOARD' ? 'Dashboard' : activeTab}
                     </h2>
+
                     {activeTab === 'DASHBOARD' && (
-                        <div className="flex-1 max-w-xl mx-8 relative">
-                            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#92c9a8]">search</span>
-                            <input className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-2 pl-10 pr-4 text-sm text-white placeholder:text-[#5e8b72] focus:outline-none focus:border-primary" placeholder="Buscar pedidos, produtos ou clientes..." />
+                        <div className="flex-1 max-w-2xl mx-12 relative group">
+                            <span className="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 font-black group-focus-within:text-primary transition-colors">search</span>
+                            <input className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-16 pr-6 text-sm text-slate-900 font-bold italic placeholder:text-slate-300 focus:outline-none focus:border-primary/50 focus:bg-white transition-all" placeholder="Buscar pedidos, produtos ou clientes..." />
                         </div>
                     )}
-                    <div className="flex items-center gap-4">
-                        <button className="text-[#92c9a8] hover:text-white transition-colors relative">
-                            <span className="material-symbols-outlined">notifications</span>
-                            <span className="absolute top-0 right-0 size-2 bg-primary rounded-full"></span>
+
+                    <div className="flex items-center gap-6">
+                        <button className="size-12 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:text-primary transition-all relative">
+                            <span className="material-symbols-outlined font-black">notifications</span>
+                            <span className="absolute top-3 right-3 size-2.5 bg-primary border-2 border-white rounded-full"></span>
                         </button>
-                        <button className="text-[#92c9a8] hover:text-white transition-colors">
-                            <span className="material-symbols-outlined">settings</span>
-                        </button>
+                        <div className="h-10 w-px bg-slate-100 mx-2"></div>
+                        <div className="flex items-center gap-4">
+                            <div className="text-right hidden xl:block">
+                                <p className="text-sm font-black text-slate-900 uppercase italic tracking-tight leading-none">Admin Arena</p>
+                                <p className="text-[10px] font-black text-primary uppercase tracking-widest mt-1 italic">Diretoria</p>
+                            </div>
+                            <div className="size-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white border-2 border-slate-100 shadow-lg">
+                                <span className="material-symbols-outlined font-black">person</span>
+                            </div>
+                        </div>
                     </div>
                 </header>
 
                 <div className="flex-1 overflow-y-auto p-6 md:p-8 no-scrollbar">
 
                     {activeTab === 'DASHBOARD' && (
-                        <div className="animate-fade-in space-y-6">
-                            <div className="flex justify-between items-end">
+                        <div className="animate-fade-in space-y-8 pb-12">
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                                 <div>
-                                    <h2 className="text-3xl font-bold text-white">Overview</h2>
-                                    <p className="text-[#92c9a8]">Monitorando performance de vendas em tempo real.</p>
+                                    <h2 className="text-4xl font-black text-slate-900 uppercase italic tracking-tighter leading-none">Visão Geral</h2>
+                                    <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest mt-2 italic">Análise de performance em tempo real</p>
                                 </div>
-                                <div className="flex gap-3">
-                                    <button onClick={() => setDateFilter(prev => prev === 'all' ? '7days' : 'all')} className={`flex items-center gap-2 px-4 py-2 border border-[#326747] rounded-lg text-xs font-bold text-white transition-colors ${dateFilter === '7days' ? 'bg-primary text-background-dark' : 'bg-[#1e382a] hover:bg-[#234832]'}`}>
-                                        <span className="material-symbols-outlined text-sm">calendar_today</span> {dateFilter === '7days' ? 'Últimos 7 Dias' : 'Todo o Período'}
+                                <div className="flex gap-4">
+                                    <button onClick={() => setDateFilter(prev => prev === 'all' ? '7days' : 'all')} className={`flex items-center gap-3 px-6 py-3 border rounded-2xl text-[10px] font-black uppercase italic tracking-widest transition-all ${dateFilter === '7days' ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20' : 'bg-white border-slate-100 text-slate-400 hover:border-slate-300'}`}>
+                                        <span className="material-symbols-outlined text-lg font-black">{dateFilter === '7days' ? 'check_circle' : 'calendar_today'}</span>
+                                        {dateFilter === '7days' ? 'Últimos 7 Dias' : 'Todo o Período'}
                                     </button>
-                                    <button onClick={handleExport} className="flex items-center gap-2 px-4 py-2 bg-[#1e382a] border border-[#326747] rounded-lg text-xs font-bold text-white hover:bg-[#234832] transition-colors">
-                                        <span className="material-symbols-outlined text-sm">download</span> Exportar Relatório
+                                    <button onClick={handleExport} className="flex items-center gap-3 px-6 py-3 bg-slate-900 border border-slate-900 rounded-2xl text-[10px] font-black uppercase italic tracking-widest text-white hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10">
+                                        <span className="material-symbols-outlined text-lg font-black">download</span> Exportar
                                     </button>
                                 </div>
                             </div>
 
                             {/* KPI Cards */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                                 {[
-                                    { label: 'Vendas Hoje', val: `R$ ${totalRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, trend: '+0%', icon: 'payments', good: true },
-                                    { label: 'Total Pedidos', val: orders.length.toString(), trend: '+0%', icon: 'shopping_bag', good: true },
-                                    { label: 'Ticket Médio', val: `R$ ${(totalRevenue / (orders.length || 1)).toFixed(2)}`, trend: '+0%', icon: 'analytics', good: true },
-                                    { label: 'Envios Pendentes', val: orders.filter(o => o.status !== 'Entregue').length.toString(), trend: '0%', icon: 'local_shipping', good: false, trendLabel: 'vs meta' },
+                                    { label: 'Receita Total', val: `R$ ${totalRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, trend: '+12%', icon: 'payments', good: true },
+                                    { label: 'Pedidos Realizados', val: orders.length.toString(), trend: '+5%', icon: 'shopping_bag', good: true },
+                                    { label: 'Ticket Médio', val: `R$ ${(totalRevenue / (orders.length || 1)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, trend: '+8%', icon: 'analytics', good: true },
+                                    { label: 'Pendentes de Envio', val: orders.filter(o => o.status !== 'Entregue').length.toString(), trend: '0%', icon: 'local_shipping', good: false, trendLabel: 'estável' },
                                 ].map((kpi, i) => (
-                                    <div key={i} className="flex flex-col gap-2 rounded-xl p-6 border border-[#326747] bg-[#112218]/50 hover:border-primary/30 transition-colors">
+                                    <div key={i} className="flex flex-col gap-4 rounded-[2.5rem] p-8 border border-slate-100 bg-white hover:border-primary/20 transition-all shadow-xl shadow-slate-200/40 group">
                                         <div className="flex justify-between items-start">
-                                            <p className="text-[#92c9a8] text-sm font-medium">{kpi.label}</p>
-                                            <span className="material-symbols-outlined text-primary opacity-50">{kpi.icon}</span>
+                                            <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest italic">{kpi.label}</p>
+                                            <div className="size-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-white transition-all">
+                                                <span className="material-symbols-outlined font-black text-xl">{kpi.icon}</span>
+                                            </div>
                                         </div>
-                                        <p className="text-white text-3xl font-black tracking-tight">{kpi.val}</p>
-                                        <div className="flex items-center gap-1">
-                                            <span className={`material-symbols-outlined text-sm font-bold ${kpi.good ? 'text-[#0bda43]' : 'text-[#fa5538]'}`}>{kpi.good ? 'trending_up' : 'trending_down'}</span>
-                                            <p className={`text-xs font-bold ${kpi.good ? 'text-[#0bda43]' : 'text-[#fa5538]'}`}>{kpi.trend} {kpi.trendLabel || 'vs hoje'}</p>
+                                        <p className="text-slate-900 text-3xl font-black italic tracking-tighter leading-none">{kpi.val}</p>
+                                        <div className="flex items-center gap-2 mt-2">
+                                            <div className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase italic tracking-widest flex items-center gap-1 ${kpi.good ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'}`}>
+                                                <span className="material-symbols-outlined text-[12px] font-black">{kpi.good ? 'trending_up' : 'trending_flat'}</span>
+                                                {kpi.trend}
+                                            </div>
+                                            <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest italic">{kpi.trendLabel || 'vs ontem'}</span>
                                         </div>
                                     </div>
                                 ))}
                             </div>
 
                             {/* Charts Row */}
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                                 {/* Revenue Chart */}
-                                <div className="lg:col-span-2 rounded-xl border border-[#326747] p-6 bg-[#112218]/50 h-[320px] flex flex-col">
-                                    <div className="mb-6">
-                                        <p className="text-[#92c9a8] text-sm font-medium">Receita Total</p>
-                                        <h3 className="text-white text-2xl font-black">R$ {totalRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h3>
+                                <div className="lg:col-span-2 rounded-[3rem] border border-slate-100 p-10 bg-white h-[420px] shadow-2xl shadow-slate-200/30 flex flex-col relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 size-64 bg-primary/5 rounded-full -mr-32 -mt-32"></div>
+                                    <div className="mb-10 relative">
+                                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest italic">Desempenho Financeiro</p>
+                                        <h3 className="text-slate-900 text-3xl font-black italic tracking-tighter mt-2">
+                                            R$ {totalRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                        </h3>
                                     </div>
-                                    <div className="flex-1 w-full h-full">
+                                    <div className="flex-1 w-full h-full relative">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <AreaChart data={revenueData}>
                                                 <defs>
                                                     <linearGradient id="colorVal" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="5%" stopColor="#2bee79" stopOpacity={0.3} />
-                                                        <stop offset="95%" stopColor="#2bee79" stopOpacity={0} />
+                                                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
+                                                        <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                                                     </linearGradient>
                                                 </defs>
                                                 <Tooltip
-                                                    contentStyle={{ backgroundColor: '#112218', borderColor: '#326747', borderRadius: '8px', color: '#fff' }}
-                                                    itemStyle={{ color: '#2bee79' }}
-                                                    labelStyle={{ color: '#92c9a8' }}
-                                                    cursor={{ stroke: '#326747', strokeWidth: 1 }}
+                                                    contentStyle={{ backgroundColor: '#fff', border: '1px solid #f1f5f9', borderRadius: '1.5rem', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', color: '#0f172a', fontWeight: 'bold' }}
+                                                    cursor={{ stroke: '#10b981', strokeWidth: 2, strokeDasharray: '4 4' }}
                                                 />
-                                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#92c9a8', fontSize: 12 }} dy={10} />
-                                                <Area type="monotone" dataKey="val" stroke="#2bee79" strokeWidth={3} fillOpacity={1} fill="url(#colorVal)" />
+                                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 'bold' }} dy={15} />
+                                                <Area type="monotone" dataKey="val" stroke="#10b981" strokeWidth={4} fillOpacity={1} fill="url(#colorVal)" />
                                             </AreaChart>
                                         </ResponsiveContainer>
                                     </div>
                                 </div>
 
                                 {/* Sales by Category Chart */}
-                                <div className="lg:col-span-1 rounded-xl border border-[#326747] p-6 bg-[#112218]/50 h-[320px] flex flex-col">
-                                    <div className="mb-6 flex justify-between items-start">
-                                        <div>
-                                            <p className="text-[#92c9a8] text-sm font-medium">Vendas por Categoria</p>
-                                            <h3 className="text-white text-2xl font-black">Unidades Vendidas</h3>
-                                        </div>
-                                        <span className="bg-[#234832] text-[#0bda43] text-xs font-bold px-2 py-1 rounded">+5.7%</span>
+                                <div className="lg:col-span-1 rounded-[3rem] border border-slate-100 p-10 bg-white h-[420px] shadow-2xl shadow-slate-200/30 flex flex-col relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 size-48 bg-slate-50 rounded-full -mr-24 -mt-24 group-hover:scale-110 transition-transform"></div>
+                                    <div className="mb-10 relative">
+                                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest italic">Distribuição Tática</p>
+                                        <h3 className="text-slate-900 text-3xl font-black italic tracking-tighter mt-2">Categorias</h3>
                                     </div>
-                                    <div className="flex-1 w-full h-full">
+                                    <div className="flex-1 w-full h-full relative">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <BarChart data={categorySalesData}>
                                                 <Tooltip
-                                                    cursor={{ fill: '#234832', opacity: 0.4 }}
-                                                    contentStyle={{ backgroundColor: '#112218', borderColor: '#326747', borderRadius: '8px', color: '#fff' }}
+                                                    cursor={{ fill: '#f8fafc', radius: 12 }}
+                                                    contentStyle={{ backgroundColor: '#fff', border: '1px solid #f1f5f9', borderRadius: '1rem' }}
                                                 />
-                                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#92c9a8', fontSize: 11 }} dy={10} />
-                                                <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 'bold' }} dy={15} />
+                                                <Bar dataKey="value" radius={[12, 12, 12, 12]} barSize={40}>
                                                     {categorySalesData.map((entry, index) => (
-                                                        <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#1e382a' : '#234832'} />
+                                                        <Cell key={`cell-${index}`} fill={index === 0 ? '#10b981' : '#0f172a'} />
                                                     ))}
                                                 </Bar>
                                             </BarChart>
@@ -556,42 +571,49 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                             </div>
 
                             {/* Bottom Row: Best Sellers & Activity */}
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                                 {/* Best Sellers */}
-                                <div className="lg:col-span-2 rounded-xl border border-[#326747] bg-[#112218]/50 flex flex-col">
-                                    <div className="p-6 border-b border-[#234832] flex justify-between items-center">
-                                        <h3 className="font-bold text-white">Mais Vendidos</h3>
-                                        <button className="text-[#0bda43] text-xs font-bold hover:underline">Ver Todos</button>
+                                <div className="lg:col-span-2 rounded-[3.5rem] border border-slate-100 bg-white shadow-2xl shadow-slate-200/30 overflow-hidden flex flex-col">
+                                    <div className="px-10 py-8 border-b border-slate-50 flex justify-between items-center bg-white/50 backdrop-blur-sm">
+                                        <h3 className="text-xl font-black text-slate-900 uppercase italic tracking-tighter">Artilheiros de Venda</h3>
+                                        <button className="text-primary text-[10px] font-black uppercase tracking-widest italic hover:underline">Ver Tabela Completa</button>
                                     </div>
-                                    <div className="p-4">
+                                    <div className="p-4 overflow-x-auto">
                                         <table className="w-full text-left">
-                                            <thead className="text-[#5e8b72] text-[10px] font-bold uppercase tracking-wider">
-                                                <tr>
-                                                    <th className="pb-4 pl-2">Produto</th>
-                                                    <th className="pb-4">Categoria</th>
-                                                    <th className="pb-4">Vendas</th>
-                                                    <th className="pb-4">Estoque</th>
-                                                    <th className="pb-4 text-right">Receita</th>
+                                            <thead>
+                                                <tr className="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em] italic border-b border-slate-50">
+                                                    <th className="pb-6 pl-6">Produto</th>
+                                                    <th className="pb-6">Categoria</th>
+                                                    <th className="pb-6">Gols (Vendas)</th>
+                                                    <th className="pb-6">Estoque</th>
+                                                    <th className="pb-6 pr-6 text-right">Faturamento</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="text-sm">
                                                 {bestSellers.map((item) => (
-                                                    <tr key={item.id} className="group hover:bg-[#234832]/30 transition-colors border-b border-[#234832] last:border-0">
-                                                        <td className="py-3 pl-2 flex items-center gap-3">
-                                                            <div className="size-10 rounded bg-[#1e382a] overflow-hidden border border-[#326747]">
-                                                                <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                                                    <tr key={item.id} className="group hover:bg-slate-50 transition-all border-b border-slate-50 last:border-0">
+                                                        <td className="py-5 pl-6 flex items-center gap-4">
+                                                            <div className="size-14 rounded-2xl bg-white border border-slate-100 overflow-hidden shadow-sm group-hover:scale-110 transition-transform">
+                                                                <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                                             </div>
-                                                            <span className="font-bold text-white text-xs md:text-sm">{item.name}</span>
+                                                            <span className="font-black text-slate-900 uppercase italic tracking-tight text-xs">{item.name}</span>
                                                         </td>
-                                                        <td className="py-3 text-[#92c9a8] text-xs md:text-sm">{item.category}</td>
-                                                        <td className="py-3 text-white font-bold">{item.sales}</td>
-                                                        <td className="py-3 w-32">
-                                                            <div className="w-full bg-[#1e382a] h-1.5 rounded-full overflow-hidden">
-                                                                <div className={`h-full rounded-full ${item.stock < 40 ? 'bg-yellow-500' : 'bg-[#0bda43]'}`} style={{ width: `${item.stock}%` }}></div>
+                                                        <td className="py-5">
+                                                            <span className="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-[9px] font-black uppercase italic tracking-widest">
+                                                                {item.category}
+                                                            </span>
+                                                        </td>
+                                                        <td className="py-5 text-slate-900 font-black italic">{item.sales}</td>
+                                                        <td className="py-5 w-40">
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="flex-1 bg-slate-100 h-2 rounded-full overflow-hidden">
+                                                                    <div className={`h-full rounded-full transition-all duration-1000 ${item.stock < 40 ? 'bg-orange-400' : 'bg-primary'}`} style={{ width: `${item.stock}%` }}></div>
+                                                                </div>
+                                                                <span className="text-[10px] font-black text-slate-400 italic">{item.stock}%</span>
                                                             </div>
                                                         </td>
-                                                        <td className="py-3 text-right font-bold text-white">R$ {item.revenue.toLocaleString('pt-BR')}</td>
+                                                        <td className="py-5 pr-6 text-right font-black text-slate-900 italic">R$ {item.revenue.toLocaleString('pt-BR')}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -600,28 +622,36 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                                 </div>
 
                                 {/* Recent Activity */}
-                                <div className="lg:col-span-1 rounded-xl border border-[#326747] bg-[#112218]/50 flex flex-col">
-                                    <div className="p-6 border-b border-[#234832] flex justify-between items-center">
-                                        <h3 className="font-bold text-white">Atividade Recente</h3>
-                                        <span className="material-symbols-outlined text-[#92c9a8] text-sm cursor-pointer hover:text-white">history</span>
+                                <div className="lg:col-span-1 rounded-[3.5rem] border border-slate-100 bg-white shadow-2xl shadow-slate-200/30 flex flex-col relative overflow-hidden">
+                                    <div className="px-10 py-8 border-b border-slate-50 flex justify-between items-center bg-white/50 backdrop-blur-sm relative">
+                                        <h3 className="text-xl font-black text-slate-900 uppercase italic tracking-tighter">Histórico do Jogo</h3>
+                                        <div className="size-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-primary transition-all cursor-pointer">
+                                            <span className="material-symbols-outlined font-black">history</span>
+                                        </div>
                                     </div>
-                                    <div className="p-6 flex flex-col gap-6">
+                                    <div className="p-10 flex flex-col gap-8 relative overflow-y-auto no-scrollbar h-[500px]">
                                         {activities.map((act, i) => (
-                                            <div key={i} className="flex gap-4 relative">
-                                                {i !== activities.length - 1 && <div className="absolute left-[19px] top-10 bottom-[-24px] w-px bg-[#234832]"></div>}
-                                                <div className="size-10 rounded-full bg-[#1e382a] border border-[#326747] flex items-center justify-center shrink-0 z-10">
-                                                    <span className={`material-symbols-outlined text-lg ${act.color}`}>{act.icon}</span>
+                                            <div key={i} className="flex gap-6 relative group">
+                                                {i !== activities.length - 1 && <div className="absolute left-6 top-12 bottom-[-42px] w-1 bg-slate-50 rounded-full"></div>}
+                                                <div className={`size-12 rounded-2xl flex items-center justify-center shrink-0 z-10 border-2 shadow-inner transition-all group-hover:scale-110 ${act.icon === 'shopping_cart' ? 'bg-emerald-50 border-emerald-100 text-emerald-500' :
+                                                    act.icon === 'person_add' ? 'bg-blue-50 border-blue-100 text-blue-500' :
+                                                        'bg-amber-50 border-amber-100 text-amber-500'
+                                                    }`}>
+                                                    <span className="material-symbols-outlined font-black text-xl">{act.icon}</span>
                                                 </div>
-                                                <div className="flex flex-col pt-0.5">
-                                                    <p className="text-white text-sm font-medium">
-                                                        {act.title} <span className="text-[#92c9a8] font-normal">{act.subtitle}</span>
+                                                <div className="flex flex-col pt-1">
+                                                    <p className="text-slate-900 text-sm font-black uppercase italic tracking-tight leading-none group-hover:text-primary transition-colors">
+                                                        {act.title}
                                                     </p>
-                                                    <div className="flex items-center gap-2 mt-1">
-                                                        <span className="text-[10px] text-[#5e8b72]">{new Date(act.created_at).toLocaleTimeString()}</span>
+                                                    <p className="text-slate-400 text-xs font-bold mt-2 leading-relaxed">
+                                                        {act.subtitle}
+                                                    </p>
+                                                    <div className="flex items-center gap-3 mt-3">
+                                                        <span className="text-[10px] font-black text-slate-300 uppercase italic tracking-widest">{new Date(act.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                                         {act.value_label && (
                                                             <>
-                                                                <span className="text-[10px] text-[#234832]">•</span>
-                                                                <span className="text-[10px] font-bold text-[#92c9a8]">{act.value_label}</span>
+                                                                <div className="size-1 bg-slate-100 rounded-full"></div>
+                                                                <span className="text-[10px] font-black text-primary uppercase italic tracking-widest">{act.value_label}</span>
                                                             </>
                                                         )}
                                                     </div>
@@ -636,30 +666,38 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                     )}
 
                     {activeTab === 'PRODUCTS' && (
-                        <div className="animate-fade-in">
-                            <div className="rounded-xl border border-[#326747] bg-[#112218]/50 overflow-hidden">
+                        <div className="animate-fade-in space-y-6">
+                            <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden">
                                 <table className="w-full text-left">
-                                    <thead className="bg-[#234832]/30 text-[#92c9a8] text-xs font-bold uppercase tracking-wider">
+                                    <thead className="bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest italic border-b border-slate-100">
                                         <tr>
-                                            <th className="px-6 py-4">ID</th>
-                                            <th className="px-6 py-4">Produto</th>
-                                            <th className="px-6 py-4">Categoria</th>
-                                            <th className="px-6 py-4">Preço</th>
-                                            <th className="px-6 py-4">Ações</th>
+                                            <th className="px-8 py-6">ID</th>
+                                            <th className="px-8 py-6">Equipamento (Produto)</th>
+                                            <th className="px-8 py-6">Tática (Categoria)</th>
+                                            <th className="px-8 py-6">Valor</th>
+                                            <th className="px-8 py-6">Ações</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-[#234832]">
+                                    <tbody className="divide-y divide-slate-50">
                                         {products.map(p => (
-                                            <tr key={p.id} className="hover:bg-[#234832]/20 transition-colors">
-                                                <td className="px-6 py-4 text-[#92c9a8] font-mono text-xs">#{p.id}</td>
-                                                <td className="px-6 py-4 flex items-center gap-3">
-                                                    <img src={p.image} className="w-10 h-10 rounded object-cover bg-white/5" />
-                                                    <span className="text-white font-medium">{p.name}</span>
+                                            <tr key={p.id} className="hover:bg-slate-50/50 transition-all group">
+                                                <td className="px-8 py-6 text-slate-400 font-black text-[10px] uppercase tracking-tighter">#{p.id.slice(0, 8)}</td>
+                                                <td className="px-8 py-6 flex items-center gap-4">
+                                                    <div className="size-12 rounded-xl bg-slate-100 border border-slate-100 overflow-hidden group-hover:scale-110 transition-transform">
+                                                        <img src={p.image} className="w-full h-full object-cover" />
+                                                    </div>
+                                                    <span className="text-slate-900 font-black uppercase italic tracking-tight text-xs">{p.name}</span>
                                                 </td>
-                                                <td className="px-6 py-4 text-[#92c9a8]">{p.category}</td>
-                                                <td className="px-6 py-4 text-white font-bold">R$ {p.price.toFixed(2)}</td>
-                                                <td className="px-6 py-4">
-                                                    <button onClick={() => handleEditClick(p)} className="text-white hover:text-primary"><span className="material-symbols-outlined">edit</span></button>
+                                                <td className="px-8 py-6">
+                                                    <span className="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-[9px] font-black uppercase italic tracking-widest">
+                                                        {p.category}
+                                                    </span>
+                                                </td>
+                                                <td className="px-8 py-6 text-slate-900 font-black italic">R$ {p.price.toFixed(2)}</td>
+                                                <td className="px-8 py-6">
+                                                    <button onClick={() => handleEditClick(p)} className="size-10 rounded-xl flex items-center justify-center bg-slate-100 text-slate-400 hover:bg-primary hover:text-white transition-all">
+                                                        <span className="material-symbols-outlined font-black text-xl">edit</span>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))}
@@ -670,81 +708,82 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                     )}
 
                     {activeTab === 'ADD_PRODUCT' && (
-                        <div className="max-w-2xl animate-fade-in">
-                            <form onSubmit={handleSubmitProduct} className="space-y-6">
-                                <div className="bg-[#112218]/50 p-8 rounded-xl border border-[#326747] space-y-6">
-                                    <div className="grid grid-cols-2 gap-6">
-                                        <div className="col-span-2">
-                                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Nome do Produto</label>
-                                            <input required value={newProduct.name || ''} onChange={e => setNewProduct({ ...newProduct, name: e.target.value })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-4 py-3 text-white focus:border-primary outline-none" />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Marca</label>
-                                            <input value={newProduct.brand || ''} onChange={e => setNewProduct({ ...newProduct, brand: e.target.value })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-4 py-3 text-white focus:border-primary outline-none" />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Preço (R$)</label>
-                                            <input type="number" step="0.01" required value={newProduct.price || ''} onChange={e => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-4 py-3 text-white focus:border-primary outline-none" />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Categoria</label>
-                                            <select value={newProduct.category} onChange={e => setNewProduct({ ...newProduct, category: e.target.value })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-4 py-3 text-white focus:border-primary outline-none">
-                                                <option>Clubes</option>
-                                                <option>Seleções</option>
-                                                <option>Retrô</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Subcategoria</label>
-                                            <select value={newProduct.subcategory} onChange={e => setNewProduct({ ...newProduct, subcategory: e.target.value })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-4 py-3 text-white focus:border-primary outline-none">
-                                                <option>Nacional</option>
-                                                <option>Internacional</option>
-                                            </select>
-                                        </div>
-                                        <div className="col-span-2">
-                                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Imagem do Produto</label>
-                                            <div className="flex gap-4 items-center">
-                                                <input
-                                                    type="file"
-                                                    accept="image/*"
-                                                    onChange={e => setSelectedFile(e.target.files ? e.target.files[0] : null)}
-                                                    className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-4 py-3 text-white focus:border-primary outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-background-dark hover:file:bg-primary/90"
-                                                />
+                        <div className="max-w-4xl animate-fade-in pb-12">
+                            <form onSubmit={handleSubmitProduct} className="space-y-8">
+                                <div className="bg-white p-12 rounded-[3.5rem] border border-slate-100 shadow-2xl shadow-slate-200/40 space-y-10 relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 size-64 bg-primary/5 rounded-full -mr-32 -mt-32"></div>
+
+                                    <div className="relative">
+                                        <h3 className="text-2xl font-black text-slate-900 uppercase italic tracking-tighter mb-8">Escalação do Produto</h3>
+                                        <div className="grid grid-cols-2 gap-8">
+                                            <div className="col-span-2">
+                                                <label className="block text-[10px] font-black uppercase text-slate-400 mb-3 italic tracking-widest pl-1">Nome de Exibição</label>
+                                                <input required value={newProduct.name || ''} onChange={e => setNewProduct({ ...newProduct, name: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-5 text-slate-900 focus:border-primary outline-none transition-all placeholder:text-slate-200 font-bold italic" placeholder="Ex: Camisa Real Madrid Home 24/25" />
                                             </div>
-                                            {/* Fallback URL input hidden or optional if needed, but removing for now as per user request to 'alterar' */}
+                                            <div>
+                                                <label className="block text-[10px] font-black uppercase text-slate-400 mb-3 italic tracking-widest pl-1">Fornecedor / Marca</label>
+                                                <input value={newProduct.brand || ''} onChange={e => setNewProduct({ ...newProduct, brand: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-5 text-slate-900 focus:border-primary outline-none transition-all placeholder:text-slate-200 font-bold italic" placeholder="Ex: Adidas" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-black uppercase text-slate-400 mb-3 italic tracking-widest pl-1">Valor do Passe (R$)</label>
+                                                <input type="number" step="0.01" required value={newProduct.price || ''} onChange={e => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-5 text-slate-900 focus:border-primary outline-none transition-all placeholder:text-slate-200 font-black italic" placeholder="0,00" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-black uppercase text-slate-400 mb-3 italic tracking-widest pl-1">Divisão (Categoria)</label>
+                                                <select value={newProduct.category} onChange={e => setNewProduct({ ...newProduct, category: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-5 text-slate-900 focus:border-primary outline-none appearance-none cursor-pointer font-bold italic">
+                                                    <option>Clubes</option>
+                                                    <option>Seleções</option>
+                                                    <option>Retrô</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-black uppercase text-slate-400 mb-3 italic tracking-widest pl-1">Localização (Subcategoria)</label>
+                                                <select value={newProduct.subcategory} onChange={e => setNewProduct({ ...newProduct, subcategory: e.target.value })} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-5 text-slate-900 focus:border-primary outline-none appearance-none cursor-pointer font-bold italic">
+                                                    <option>Nacional</option>
+                                                    <option>Internacional</option>
+                                                </select>
+                                            </div>
+                                            <div className="col-span-2">
+                                                <label className="block text-[10px] font-black uppercase text-slate-400 mb-3 italic tracking-widest pl-1">Manto Sagrado (Imagem)</label>
+                                                <div className="flex gap-4 items-center">
+                                                    <div className="flex-1 relative">
+                                                        <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            onChange={e => setSelectedFile(e.target.files ? e.target.files[0] : null)}
+                                                            className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-5 text-slate-900 focus:border-primary outline-none file:mr-6 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[9px] file:font-black file:uppercase file:bg-primary file:text-white hover:file:bg-primary-dark transition-all"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
                                     {/* Dimensions Section */}
-                                    <div className="border-t border-[#326747] pt-6">
-                                        <h3 className="text-[#92c9a8] font-bold text-sm uppercase mb-4">Dimensões para Frete</h3>
-                                        <div className="grid grid-cols-4 gap-4">
-                                            <div>
-                                                <label className="block text-xs font-bold uppercase text-[#5e8b72] mb-1">Peso (kg)</label>
-                                                <input type="number" step="0.1" value={newProduct.weight} onChange={e => setNewProduct({ ...newProduct, weight: parseFloat(e.target.value) })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-3 py-2 text-white focus:border-primary outline-none" />
-                                            </div>
-                                            <div>
-                                                <label className="block text-xs font-bold uppercase text-[#5e8b72] mb-1">Altura (cm)</label>
-                                                <input type="number" value={newProduct.height} onChange={e => setNewProduct({ ...newProduct, height: parseFloat(e.target.value) })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-3 py-2 text-white focus:border-primary outline-none" />
-                                            </div>
-                                            <div>
-                                                <label className="block text-xs font-bold uppercase text-[#5e8b72] mb-1">Largura (cm)</label>
-                                                <input type="number" value={newProduct.width} onChange={e => setNewProduct({ ...newProduct, width: parseFloat(e.target.value) })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-3 py-2 text-white focus:border-primary outline-none" />
-                                            </div>
-                                            <div>
-                                                <label className="block text-xs font-bold uppercase text-[#5e8b72] mb-1">Comprimento (cm)</label>
-                                                <input type="number" value={newProduct.length} onChange={e => setNewProduct({ ...newProduct, length: parseFloat(e.target.value) })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-3 py-2 text-white focus:border-primary outline-none" />
-                                            </div>
+                                    <div className="pt-10 border-t border-slate-50 relative">
+                                        <h3 className="text-[10px] font-black uppercase text-slate-400 mb-6 italic tracking-widest">Dimensões para Logística</h3>
+                                        <div className="grid grid-cols-4 gap-6">
+                                            {[
+                                                { label: 'Peso (kg)', key: 'weight', step: '0.1' },
+                                                { label: 'Altura (cm)', key: 'height' },
+                                                { label: 'Largura (cm)', key: 'width' },
+                                                { label: 'Comprimento (cm)', key: 'length' },
+                                            ].map(field => (
+                                                <div key={field.key}>
+                                                    <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 italic tracking-widest">{field.label}</label>
+                                                    <input type="number" step={field.step || '1'} value={(newProduct as any)[field.key]} onChange={e => setNewProduct({ ...newProduct, [field.key]: parseFloat(e.target.value) })} className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-slate-900 focus:border-primary outline-none font-bold text-center italic" />
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
 
                                     {/* Inventory Section */}
-                                    <div className="border-t border-[#326747] pt-6">
-                                        <h3 className="text-[#92c9a8] font-bold text-sm uppercase mb-4">Estoque por Tamanho</h3>
-                                        <div className="grid grid-cols-5 gap-4">
+                                    <div className="pt-10 border-t border-slate-50 relative">
+                                        <h3 className="text-[10px] font-black uppercase text-slate-400 mb-6 italic tracking-widest">Estoque por Tamanho</h3>
+                                        <div className="grid grid-cols-5 gap-6">
                                             {['P', 'M', 'G', 'GG', 'XG'].map(size => (
                                                 <div key={size}>
-                                                    <label className="block text-xs font-bold uppercase text-[#5e8b72] mb-1">{size}</label>
+                                                    <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 italic tracking-widest text-center">{size}</label>
                                                     <input
                                                         type="number"
                                                         min="0"
@@ -753,16 +792,17 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                                                             ...newProduct,
                                                             inventory: { ...newProduct.inventory, [size]: parseInt(e.target.value) || 0 }
                                                         })}
-                                                        className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-3 py-2 text-white focus:border-primary outline-none text-center"
+                                                        className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-slate-900 focus:border-primary outline-none text-center font-black italic"
                                                     />
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
-                                    <div className="flex justify-end gap-4 pt-4 border-t border-[#326747]">
-                                        <button type="button" onClick={() => setActiveTab('PRODUCTS')} className="px-6 py-2 text-[#92c9a8] font-bold hover:text-white">Cancelar</button>
-                                        <button type="submit" disabled={uploading} className="px-6 py-2 bg-primary text-background-dark font-bold rounded-lg hover:opacity-90 disabled:opacity-50">
-                                            {uploading ? 'Enviando...' : 'Salvar Produto'}
+
+                                    <div className="flex justify-end gap-6 pt-10 border-t border-slate-50 relative">
+                                        <button type="button" onClick={() => setActiveTab('PRODUCTS')} className="px-8 py-4 text-[10px] font-black uppercase text-slate-400 hover:text-slate-900 transition-colors italic tracking-widest">Cancelar</button>
+                                        <button type="submit" disabled={uploading} className="px-10 py-5 bg-primary text-white font-black rounded-2xl hover:bg-primary-dark disabled:opacity-50 transition-all shadow-lg shadow-primary/20 uppercase text-[10px] tracking-widest italic">
+                                            {uploading ? 'Processando...' : 'Confirmar Escalação'}
                                         </button>
                                     </div>
                                 </div>
@@ -771,38 +811,44 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                     )}
 
                     {activeTab === 'ORDERS' && (
-                        <div className="animate-fade-in">
-                            <div className="rounded-xl border border-[#326747] bg-[#112218]/50 overflow-hidden">
+                        <div className="animate-fade-in space-y-6">
+                            <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden">
                                 <table className="w-full text-left">
-                                    <thead className="bg-[#234832]/30 text-[#92c9a8] text-xs font-bold uppercase tracking-wider">
+                                    <thead className="bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest italic border-b border-slate-100">
                                         <tr>
-                                            <th className="px-6 py-4">ID</th>
-                                            <th className="px-6 py-4">Data</th>
-                                            <th className="px-6 py-4">Cliente</th>
-                                            <th className="px-6 py-4">Total</th>
-                                            <th className="px-6 py-4">Status</th>
-                                            <th className="px-6 py-4">Ação</th>
+                                            <th className="px-8 py-6">ID Pedido</th>
+                                            <th className="px-8 py-6">Data da Compra</th>
+                                            <th className="px-8 py-6">Cliente</th>
+                                            <th className="px-8 py-6">Faturamento</th>
+                                            <th className="px-8 py-6">Status da Partida</th>
+                                            <th className="px-8 py-6 text-right">Ação</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-[#234832]">
+                                    <tbody className="divide-y divide-slate-50">
                                         {orders.map(o => (
-                                            <tr key={o.id} className="hover:bg-[#234832]/20 transition-colors">
-                                                <td className="px-6 py-4 text-[#92c9a8] font-mono text-xs">{o.id}</td>
-                                                <td className="px-6 py-4 text-white">{o.date}</td>
-                                                <td className="px-6 py-4 text-white">Carlos Silva</td> {/* Mock */}
-                                                <td className="px-6 py-4 text-white font-bold">R$ {o.total.toFixed(2)}</td>
-                                                <td className="px-6 py-4">
-                                                    <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${o.status === 'Entregue' ? 'bg-green-500/20 text-green-500' : 'bg-yellow-500/20 text-yellow-500'}`}>
-                                                        {o.status}
-                                                    </span>
+                                            <tr key={o.id} className="hover:bg-slate-50/50 transition-all group">
+                                                <td className="px-8 py-6 text-slate-400 font-black text-[10px] uppercase tracking-tighter">#{o.id.slice(0, 8)}</td>
+                                                <td className="px-8 py-6 text-slate-600 font-bold italic">{o.date}</td>
+                                                <td className="px-8 py-6">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-slate-900 font-black uppercase italic tracking-tight text-xs">Carlos Silva</span>
+                                                        <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Sócio Premium</span>
+                                                    </div>
                                                 </td>
-                                                <td className="px-6 py-4">
+                                                <td className="px-8 py-6 text-slate-900 font-black italic">R$ {o.total.toFixed(2)}</td>
+                                                <td className="px-8 py-6">
+                                                    <div className={`px-4 py-2 rounded-full text-[9px] font-black uppercase italic tracking-widest inline-flex items-center gap-2 ${o.status === 'Entregue' ? 'bg-emerald-50 text-emerald-600' : 'bg-orange-50 text-orange-600'}`}>
+                                                        <span className={`size-1.5 rounded-full ${o.status === 'Entregue' ? 'bg-emerald-500' : 'bg-orange-500 animate-pulse'}`}></span>
+                                                        {o.status}
+                                                    </div>
+                                                </td>
+                                                <td className="px-8 py-6 text-right">
                                                     {o.status !== 'Entregue' && (
                                                         <button
                                                             onClick={() => onUpdateStatus && onUpdateStatus(o.id, 'Entregue')}
-                                                            className="text-primary text-xs font-bold hover:underline"
+                                                            className="px-4 py-2 bg-slate-900 text-white text-[9px] font-black uppercase italic tracking-widest rounded-xl hover:bg-primary transition-all shadow-md shadow-slate-900/10"
                                                         >
-                                                            Marcar Entregue
+                                                            Finalizar Pedido
                                                         </button>
                                                     )}
                                                 </td>
@@ -815,44 +861,51 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                     )}
 
                     {activeTab === 'BANNERS' && (
-                        <div className="animate-fade-in space-y-8">
-                            <div className="flex justify-between items-center">
+                        <div className="animate-fade-in space-y-10 pb-12">
+                            <div className="bg-emerald-50 border border-emerald-100 rounded-[2.5rem] p-8 flex items-center gap-6">
+                                <div className="size-14 rounded-2xl bg-white flex items-center justify-center text-primary shadow-sm">
+                                    <span className="material-symbols-outlined text-3xl font-black">view_carousel</span>
+                                </div>
                                 <div>
-                                    <h2 className="text-2xl font-bold text-white">Gerenciamento do Hero</h2>
-                                    <p className="text-[#92c9a8]">Edite os banners, textos e links que aparecem na home do site.</p>
+                                    <h2 className="text-xl font-black text-slate-900 uppercase italic tracking-tighter">Comando do Front-End</h2>
+                                    <p className="text-slate-500 text-xs font-bold mt-1 uppercase tracking-widest">Edite a escalada principal da sua home (Banners e Hero)</p>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 gap-8">
+                            <div className="grid grid-cols-1 gap-12">
                                 {banners.map((banner, idx) => (
-                                    <div key={banner.id} className="bg-[#112218]/50 border border-[#326747] rounded-2xl p-6 md:p-8 flex flex-col lg:flex-row gap-8">
+                                    <div key={banner.id} className="bg-white border border-slate-100 rounded-[3rem] p-10 shadow-2xl shadow-slate-200/40 flex flex-col lg:flex-row gap-12 relative overflow-hidden group">
+                                        <div className="absolute top-0 right-0 size-64 bg-slate-50/50 rounded-full -mr-32 -mt-32 transition-transform group-hover:scale-110"></div>
+
                                         {/* Image Preview */}
-                                        <div className="w-full lg:w-1/3 shrink-0">
-                                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-3">Preview da Imagem</label>
-                                            <div className="aspect-video rounded-xl overflow-hidden border border-[#326747] relative group">
-                                                <img src={banner.image_url} alt={banner.title} className="w-full h-full object-cover" />
-                                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                    <button className="bg-primary text-background-dark px-4 py-2 rounded-lg font-bold text-xs uppercase">Alterar Imagem</button>
+                                        <div className="w-full lg:w-1/3 shrink-0 relative">
+                                            <label className="block text-[10px] font-black uppercase text-slate-400 mb-4 italic tracking-widest pl-1">Manto do Banner (Preview)</label>
+                                            <div className="aspect-[16/10] rounded-[2.5rem] overflow-hidden border-4 border-slate-50 relative shadow-xl shadow-slate-200/50">
+                                                <img src={banner.image_url} alt={banner.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                                <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center backdrop-blur-sm">
+                                                    <span className="material-symbols-outlined text-white text-5xl font-black">cloud_upload</span>
                                                 </div>
                                             </div>
-                                            <input
-                                                className="mt-4 w-full bg-[#1e382a] border border-[#326747] rounded-lg py-2 px-4 text-xs text-white"
-                                                defaultValue={banner.image_url}
-                                                onBlur={async (e) => {
-                                                    await supabase.from('arena_banners').update({ image_url: e.target.value }).eq('id', banner.id);
-                                                    onUpdateBanners?.();
-                                                    alert("Imagem atualizada!");
-                                                }}
-                                                placeholder="URL da Imagem..."
-                                            />
+                                            <div className="mt-6 flex flex-col gap-2">
+                                                <label className="text-[9px] font-black uppercase text-slate-300 ml-4 mb-2 tracking-widest">URL Direta da Imagem</label>
+                                                <input
+                                                    className="w-full bg-slate-50 border border-slate-50 rounded-2xl py-4 px-6 text-[10px] text-slate-400 font-bold focus:bg-white focus:border-primary outline-none transition-all italic"
+                                                    defaultValue={banner.image_url}
+                                                    onBlur={async (e) => {
+                                                        await supabase.from('arena_banners').update({ image_url: e.target.value }).eq('id', banner.id);
+                                                        onUpdateBanners?.();
+                                                    }}
+                                                    placeholder="URL da Imagem..."
+                                                />
+                                            </div>
                                         </div>
 
                                         {/* Fields */}
-                                        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Tag (Badge)</label>
+                                        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+                                            <div className="col-span-2 md:col-span-1">
+                                                <label className="block text-[10px] font-black uppercase text-slate-400 mb-3 italic tracking-widest pl-1">Destaque (Badge)</label>
                                                 <input
-                                                    className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
+                                                    className="w-full bg-slate-50 border border-slate-50 rounded-2xl py-4 px-6 text-slate-900 font-black italic focus:bg-white focus:border-primary outline-none transition-all uppercase tracking-widest"
                                                     defaultValue={banner.tag}
                                                     onBlur={async (e) => {
                                                         await supabase.from('arena_banners').update({ tag: e.target.value }).eq('id', banner.id);
@@ -860,10 +913,10 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                                                     }}
                                                 />
                                             </div>
-                                            <div>
-                                                <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Título do Banner</label>
+                                            <div className="col-span-2 md:col-span-1">
+                                                <label className="block text-[10px] font-black uppercase text-slate-400 mb-3 italic tracking-widest pl-1">Título da Jogada</label>
                                                 <input
-                                                    className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
+                                                    className="w-full bg-slate-50 border border-slate-50 rounded-2xl py-4 px-6 text-slate-900 font-black italic focus:bg-white focus:border-primary outline-none transition-all uppercase"
                                                     defaultValue={banner.title}
                                                     onBlur={async (e) => {
                                                         await supabase.from('arena_banners').update({ title: e.target.value }).eq('id', banner.id);
@@ -871,10 +924,10 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                                                     }}
                                                 />
                                             </div>
-                                            <div className="md:col-span-2">
-                                                <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Descrição / Subtítulo</label>
+                                            <div className="col-span-2">
+                                                <label className="block text-[10px] font-black uppercase text-slate-400 mb-3 italic tracking-widest pl-1">Preleção (Descrição)</label>
                                                 <textarea
-                                                    className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none h-24 resize-none"
+                                                    className="w-full bg-slate-50 border border-slate-50 rounded-2xl py-4 px-6 text-slate-600 font-bold focus:bg-white focus:border-primary outline-none transition-all h-24 resize-none leading-relaxed"
                                                     defaultValue={banner.subtitle}
                                                     onBlur={async (e) => {
                                                         await supabase.from('arena_banners').update({ subtitle: e.target.value }).eq('id', banner.id);
@@ -883,87 +936,79 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                                                 />
                                             </div>
 
-                                            {/* Primary Button Group */}
-                                            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Botão Primário (Texto)</label>
-                                                    <input
-                                                        className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
-                                                        defaultValue={banner.button_primary_text}
-                                                        onBlur={async (e) => {
-                                                            await supabase.from('arena_banners').update({ button_primary_text: e.target.value }).eq('id', banner.id);
-                                                            onUpdateBanners?.();
-                                                        }}
-                                                        placeholder="Ex: Ver Coleção"
-                                                    />
+                                            {/* Button Configs */}
+                                            <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-slate-50">
+                                                <div className="space-y-4">
+                                                    <label className="block text-[10px] font-black uppercase text-slate-900 mb-2 italic tracking-[0.2em]">Botão de Ataque (Primário)</label>
+                                                    <div className="flex flex-col gap-3">
+                                                        <input
+                                                            className="w-full bg-slate-50 border border-slate-50 rounded-xl py-3 px-5 text-[10px] font-black uppercase italic tracking-widest focus:bg-white focus:border-primary outline-none transition-all"
+                                                            defaultValue={banner.button_primary_text}
+                                                            onBlur={async (e) => {
+                                                                await supabase.from('arena_banners').update({ button_primary_text: e.target.value }).eq('id', banner.id);
+                                                                onUpdateBanners?.();
+                                                            }}
+                                                            placeholder="Texto do Botão"
+                                                        />
+                                                        <select
+                                                            className="w-full bg-slate-50 border border-slate-50 rounded-xl py-3 px-5 text-[10px] font-black uppercase italic tracking-widest focus:bg-white focus:border-primary outline-none appearance-none cursor-pointer"
+                                                            defaultValue={banner.button_primary_link}
+                                                            onChange={async (e) => {
+                                                                await supabase.from('arena_banners').update({ button_primary_link: e.target.value }).eq('id', banner.id);
+                                                                onUpdateBanners?.();
+                                                            }}
+                                                        >
+                                                            <option value="">Destino Coleção...</option>
+                                                            {availableLinks.map(link => (
+                                                                <option key={link.value} value={link.value}>{link.label}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Botão Primário (Link)</label>
-                                                    <select
-                                                        className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none appearance-none cursor-pointer"
-                                                        defaultValue={banner.button_primary_link}
-                                                        onChange={async (e) => {
-                                                            await supabase.from('arena_banners').update({ button_primary_link: e.target.value }).eq('id', banner.id);
-                                                            onUpdateBanners?.();
-                                                        }}
-                                                    >
-                                                        <option value="">Selecione um destino...</option>
-                                                        {availableLinks.map(link => (
-                                                            <option key={link.value} value={link.value}>{link.label}</option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            {/* Secondary Button Group */}
-                                            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Botão Secundário (Texto)</label>
-                                                    <input
-                                                        className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
-                                                        defaultValue={banner.button_secondary_text}
-                                                        onBlur={async (e) => {
-                                                            await supabase.from('arena_banners').update({ button_secondary_text: e.target.value }).eq('id', banner.id);
-                                                            onUpdateBanners?.();
-                                                        }}
-                                                        placeholder="Ex: Saiba Mais (Opcional)"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Botão Secundário (Link)</label>
-                                                    <select
-                                                        className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none appearance-none cursor-pointer"
-                                                        defaultValue={banner.button_secondary_link}
-                                                        onChange={async (e) => {
-                                                            await supabase.from('arena_banners').update({ button_secondary_link: e.target.value }).eq('id', banner.id);
-                                                            onUpdateBanners?.();
-                                                        }}
-                                                    >
-                                                        <option value="">Selecione um destino...</option>
-                                                        {availableLinks.map(link => (
-                                                            <option key={link.value} value={link.value}>{link.label}</option>
-                                                        ))}
-                                                    </select>
+                                                <div className="space-y-4">
+                                                    <label className="block text-[10px] font-black uppercase text-slate-400 mb-2 italic tracking-[0.2em]">Botão de Apoio (Secundário)</label>
+                                                    <div className="flex flex-col gap-3">
+                                                        <input
+                                                            className="w-full bg-slate-50 border border-slate-50 rounded-xl py-3 px-5 text-[10px] font-black uppercase italic tracking-widest focus:bg-white focus:border-primary outline-none transition-all"
+                                                            defaultValue={banner.button_secondary_text}
+                                                            onBlur={async (e) => {
+                                                                await supabase.from('arena_banners').update({ button_secondary_text: e.target.value }).eq('id', banner.id);
+                                                                onUpdateBanners?.();
+                                                            }}
+                                                            placeholder="Texto Opcional"
+                                                        />
+                                                        <select
+                                                            className="w-full bg-slate-50 border border-slate-50 rounded-xl py-3 px-5 text-[10px] font-black uppercase italic tracking-widest focus:bg-white focus:border-primary outline-none appearance-none cursor-pointer"
+                                                            defaultValue={banner.button_secondary_link}
+                                                            onChange={async (e) => {
+                                                                await supabase.from('arena_banners').update({ button_secondary_link: e.target.value }).eq('id', banner.id);
+                                                                onUpdateBanners?.();
+                                                            }}
+                                                        >
+                                                            <option value="">Destino Coleção...</option>
+                                                            {availableLinks.map(link => (
+                                                                <option key={link.value} value={link.value}>{link.label}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-[#326747]/30">
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Tempo de Exibição (ms)</label>
+                                            <div className="col-span-2 flex items-center justify-between pt-8 border-t border-slate-50">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="text-[10px] font-black uppercase text-slate-300 italic tracking-[0.2em]">Prorrogação (ms):</div>
                                                     <input
                                                         type="number"
                                                         step="500"
-                                                        min="1000"
-                                                        className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
+                                                        className="w-24 bg-slate-100 border-none rounded-lg py-2 px-3 text-slate-600 font-bold text-center"
                                                         defaultValue={banner.display_duration || 5000}
                                                         onBlur={async (e) => {
                                                             await supabase.from('arena_banners').update({ display_duration: parseInt(e.target.value) }).eq('id', banner.id);
                                                             onUpdateBanners?.();
                                                         }}
-                                                        placeholder="Padrão: 5000 (5 segundos)"
                                                     />
-                                                    <p className="mt-1.5 text-[10px] text-[#5e8b72]">Padrão é 5000ms (5 segundos). Mínimo 1000ms.</p>
                                                 </div>
+                                                <div className="px-6 py-2 bg-slate-900 text-white rounded-full text-[9px] font-black uppercase italic tracking-widest">Ativo em Campo</div>
                                             </div>
                                         </div>
 
@@ -974,26 +1019,42 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                     )}
 
                     {activeTab === 'CLIENTS' && (
-                        <div className="animate-fade-in">
-                            <div className="rounded-xl border border-[#326747] bg-[#112218]/50 overflow-hidden">
+                        <div className="animate-fade-in space-y-6">
+                            <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden">
                                 <table className="w-full text-left">
-                                    <thead className="bg-[#234832]/30 text-[#92c9a8] text-xs font-bold uppercase tracking-wider">
+                                    <thead className="bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest italic border-b border-slate-100">
                                         <tr>
-                                            <th className="px-6 py-4">Cliente</th>
-                                            <th className="px-6 py-4">E-mail</th>
-                                            <th className="px-6 py-4">Pedidos</th>
-                                            <th className="px-6 py-4">Total Gasto</th>
-                                            <th className="px-6 py-4">Última Compra</th>
+                                            <th className="px-8 py-6">Ficha do Atleta (Cliente)</th>
+                                            <th className="px-8 py-6">Contato Oficial</th>
+                                            <th className="px-8 py-6">Partidas (Pedidos)</th>
+                                            <th className="px-8 py-6">Investimento Total</th>
+                                            <th className="px-8 py-6 text-right">Última Entrada</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-[#234832]">
+                                    <tbody className="divide-y divide-slate-50">
                                         {clients.map(c => (
-                                            <tr key={c.id} className="hover:bg-[#234832]/20 transition-colors">
-                                                <td className="px-6 py-4 text-white font-bold">{c.name}</td>
-                                                <td className="px-6 py-4 text-[#92c9a8]">{c.email}</td>
-                                                <td className="px-6 py-4 text-white">{c.ordersCount}</td>
-                                                <td className="px-6 py-4 text-primary font-bold">R$ {c.totalSpent.toFixed(2)}</td>
-                                                <td className="px-6 py-4 text-white/60 text-sm">{c.lastOrder}</td>
+                                            <tr key={c.id} className="hover:bg-slate-50/50 transition-all group">
+                                                <td className="px-8 py-6">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="size-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white border-2 border-slate-100 shadow-lg font-black italic text-sm">
+                                                            {c.name ? c.name.charAt(0).toUpperCase() : (c.email ? c.email.charAt(0).toUpperCase() : 'A')}
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                            <span className="text-slate-900 font-black uppercase italic tracking-tight text-xs">{c.name || `Atleta #${c.id.slice(0, 6)}`}</span>
+                                                            <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Membro Ativo</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="px-8 py-6 text-slate-600 font-bold text-xs italic">{c.email}</td>
+                                                <td className="px-8 py-6">
+                                                    <span className="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-[9px] font-black uppercase italic tracking-widest">
+                                                        {c.ordersCount} Pedidos
+                                                    </span>
+                                                </td>
+                                                <td className="px-8 py-6 text-slate-900 font-black italic">R$ {c.totalSpent.toFixed(2)}</td>
+                                                <td className="px-8 py-6 text-right">
+                                                    <span className="text-[10px] text-slate-400 font-black uppercase italic tracking-widest">{c.lastOrder || 'N/A'}</span>
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
