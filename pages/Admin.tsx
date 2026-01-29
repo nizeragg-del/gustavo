@@ -15,6 +15,65 @@ interface AdminProps {
 
 const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct, onUpdateStatus, onNavigateHome }) => {
     const [activeTab, setActiveTab] = useState<AdminTab>('DASHBOARD');
+    const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [authError, setAuthError] = useState<string | null>(null);
+
+    React.useEffect(() => {
+        checkUser();
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            if (session) {
+                verifyAdmin(session.user);
+            } else {
+                setUser(null);
+                setLoading(false);
+            }
+        });
+        return () => subscription.unsubscribe();
+    }, []);
+
+    const checkUser = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            await verifyAdmin(session.user);
+        } else {
+            setLoading(false);
+        }
+    };
+
+    const verifyAdmin = async (authUser: any) => {
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', authUser.id)
+            .single();
+
+        if (profile?.role === 'admin') {
+            setUser(authUser);
+        } else if (profile) {
+            setAuthError('Você não tem permissão de administrador.');
+            await supabase.auth.signOut();
+        }
+        setLoading(false);
+    };
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setAuthError(null);
+        setLoading(true);
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+            setAuthError('E-mail ou senha inválidos.');
+            setLoading(false);
+        }
+    };
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        setUser(null);
+    };
 
     // Form State for Add Product
     const [newProduct, setNewProduct] = useState<Partial<Product>>({
@@ -89,6 +148,74 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
         image: p.image
     }));
 
+    if (loading) {
+        return (
+            <div className="flex h-screen items-center justify-center bg-background-dark text-white">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary"></div>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return (
+            <div className="flex h-screen items-center justify-center bg-background-dark p-4 font-display">
+                <div className="bg-[#112218]/50 border border-[#326747] rounded-2xl p-8 max-w-md w-full animate-scale-in">
+                    <div className="flex flex-col items-center gap-4 mb-8">
+                        <span className="material-symbols-outlined text-primary text-6xl">admin_panel_settings</span>
+                        <h2 className="text-2xl font-black uppercase text-white tracking-widest text-center">Acesso Restrito</h2>
+                        <p className="text-[#92c9a8] text-sm text-center">Entre com suas credenciais de administrador.</p>
+                    </div>
+
+                    <form className="space-y-6" onSubmit={handleLogin}>
+                        <div>
+                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">E-mail</label>
+                            <input
+                                type="email"
+                                required
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-4 py-4 text-white focus:border-primary outline-none transition-colors"
+                                placeholder="admin@arenagolaco.com"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Senha</label>
+                            <input
+                                type="password"
+                                required
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-4 py-4 text-white focus:border-primary outline-none transition-colors"
+                                placeholder="********"
+                            />
+                        </div>
+
+                        {authError && (
+                            <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 flex items-center gap-3">
+                                <span className="material-symbols-outlined text-red-500 text-sm">error</span>
+                                <p className="text-red-500 text-xs font-bold uppercase">{authError}</p>
+                            </div>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-primary hover:bg-primary/90 disabled:opacity-50 text-background-dark font-black py-5 rounded-xl transition-all uppercase tracking-tighter"
+                        >
+                            {loading ? 'AUTENTICANDO...' : 'ENTRAR NO PAINEL'}
+                        </button>
+                    </form>
+
+                    <div className="mt-8 pt-6 border-t border-[#326747] text-center">
+                        <button onClick={onNavigateHome} className="text-[#92c9a8] text-sm font-bold hover:text-white transition-colors flex items-center justify-center gap-2 mx-auto">
+                            <span className="material-symbols-outlined text-sm">arrow_back</span>
+                            Voltar para a Loja
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="flex h-screen overflow-hidden bg-background-dark text-white font-display">
             {/* Sidebar */}
@@ -138,6 +265,12 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
                             <span className="material-symbols-outlined text-lg">logout</span>
                         </button>
                     </div>
+                </div>
+                <div className="mt-auto p-4 border-t border-[#234832]">
+                    <button onClick={handleLogout} className="flex w-full items-center gap-4 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors font-bold text-sm uppercase">
+                        <span className="material-symbols-outlined">logout</span>
+                        Sair do Painel
+                    </button>
                 </div>
             </aside>
 
