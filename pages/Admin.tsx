@@ -132,16 +132,26 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
 
     React.useEffect(() => {
         const fetchClients = async () => {
-            const { data } = await supabase.from('arena_profiles').select('*');
-            if (data) {
-                setClients(data.map((p, i) => ({
-                    id: i + 1,
-                    name: p.full_name || p.email.split('@')[0],
-                    email: p.email,
-                    totalSpent: 0,
-                    ordersCount: 0,
-                    lastOrder: new Date(p.created_at).toLocaleDateString()
-                })));
+            const { data: profiles } = await supabase.from('arena_profiles').select('*');
+            const { data: ordersData } = await supabase.from('arena_orders').select('user_id, total_amount, created_at');
+
+            if (profiles) {
+                setClients(profiles.map((p, i) => {
+                    const userOrders = ordersData?.filter(o => o.user_id === p.id) || [];
+                    const totalSpent = userOrders.reduce((acc, o) => acc + Number(o.total_amount), 0);
+                    const lastOrder = userOrders.length > 0
+                        ? new Date(Math.max(...userOrders.map(o => new Date(o.created_at).getTime()))).toLocaleDateString()
+                        : 'Sem compras';
+
+                    return {
+                        id: i + 1,
+                        name: p.full_name || p.email.split('@')[0],
+                        email: p.email,
+                        totalSpent: totalSpent,
+                        ordersCount: userOrders.length,
+                        lastOrder: lastOrder
+                    };
+                }));
             }
         };
         fetchClients();

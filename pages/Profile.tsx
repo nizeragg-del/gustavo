@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Address, Order, User } from '../types';
+import { supabase } from '../lib/supabase';
 
 type ProfileTab = 'OVERVIEW' | 'DATA' | 'ORDERS' | 'ADDRESSES';
 
@@ -26,9 +27,61 @@ const Profile: React.FC<ProfileProps> = ({ user: authUser, orders, initialTab = 
     const [newAddress, setNewAddress] = useState<Partial<Address>>({});
     const [isAddingAddress, setIsAddingAddress] = useState(false);
 
-    const handleSaveData = () => {
+    // Fetch Profile Data from DB
+    React.useEffect(() => {
+        const fetchProfile = async () => {
+            if (!authUser?.id) return;
+            try {
+                const { data, error } = await supabase
+                    .from('arena_profiles')
+                    .select('*')
+                    .eq('id', authUser.id)
+                    .single();
+
+                if (data) {
+                    setUser(prev => ({
+                        ...prev,
+                        name: data.full_name || prev.name,
+                        email: data.email || prev.email,
+                        phone: data.phone || "",
+                        cpf: data.cpf || "",
+                        // Map single address jsonb to array if exists
+                        addresses: data.address ? [{
+                            id: 1,
+                            name: 'Principal',
+                            street: data.address.street || '',
+                            district: data.address.district || '',
+                            city: `${data.address.city || ''}/${data.address.state || ''}`,
+                            zip: data.address.zip || '',
+                            isDefault: true
+                        }] : []
+                    }));
+                }
+            } catch (err) {
+                console.error("Error fetching profile:", err);
+            }
+        };
+        fetchProfile();
+    }, [authUser]);
+
+    const handleSaveData = async () => {
         setIsEditing(false);
-        // In a real app, API call here
+        try {
+            // Save to DB
+            const { error } = await supabase
+                .from('arena_profiles')
+                .update({
+                    full_name: user.name,
+                    phone: user.phone,
+                    cpf: user.cpf
+                })
+                .eq('id', authUser.id);
+
+            if (error) throw error;
+            alert("Dados atualizados com sucesso!");
+        } catch (e: any) {
+            alert("Erro ao atualizar: " + e.message);
+        }
     };
 
     const handleAddAddress = () => {
@@ -227,8 +280,8 @@ const Profile: React.FC<ProfileProps> = ({ user: authUser, orders, initialTab = 
                                         </div>
                                         <div className="text-right flex flex-col items-end gap-2 w-full md:w-auto">
                                             <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${order.status === 'Entregue' ? 'bg-green-500/20 text-green-500' :
-                                                    order.status === 'Cancelado' ? 'bg-red-500/20 text-red-500' :
-                                                        'bg-yellow-500/20 text-yellow-500'
+                                                order.status === 'Cancelado' ? 'bg-red-500/20 text-red-500' :
+                                                    'bg-yellow-500/20 text-yellow-500'
                                                 }`}>
                                                 {order.status}
                                             </span>
