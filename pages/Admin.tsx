@@ -319,37 +319,22 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
                         </button>
                     </nav>
                 </div>
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 mt-12">
                     <button onClick={() => setActiveTab('ADD_PRODUCT')} className="flex w-full cursor-pointer items-center justify-center rounded-lg h-11 bg-primary text-background-dark text-sm font-bold tracking-tight hover:opacity-90 transition-opacity">
                         <span className="material-symbols-outlined mr-2 text-lg">add_circle</span> Novo Produto
                     </button>
-                    <div className="flex items-center gap-3 px-3 mt-4 border-t border-[#234832] pt-6">
-                        <div className="size-10 rounded-full bg-white/10 flex items-center justify-center overflow-hidden">
-                            <img src="https://ui-avatars.com/api/?name=Ricardo+Silva&background=random" alt="Admin" />
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-sm font-bold text-white">Ricardo Silva</span>
-                            <span className="text-[10px] text-[#92c9a8] uppercase font-bold">Super Admin</span>
-                        </div>
-                        <button className="ml-auto text-[#92c9a8] hover:text-white">
-                            <span className="material-symbols-outlined text-lg">logout</span>
-                        </button>
-                    </div>
+                    {/* Profile section removed as per request */}
                 </div>
                 <div className="mt-auto p-4 border-t border-[#234832] space-y-2">
                     <button onClick={onNavigateHome} className="flex w-full items-center gap-4 px-4 py-3 rounded-xl text-[#92c9a8] hover:bg-[#234832] hover:text-white transition-colors font-bold text-sm uppercase">
                         <span className="material-symbols-outlined">arrow_back</span>
                         Voltar ao Site
                     </button>
-                    <button onClick={handleLogout} className="flex w-full items-center gap-4 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors font-bold text-sm uppercase">
-                        <span className="material-symbols-outlined">logout</span>
-                        Sair do Painel
-                    </button>
                 </div>
-            </aside>
+            </aside >
 
             {/* Content */}
-            <main className="flex-1 flex flex-col overflow-hidden bg-background-dark">
+            < main className="flex-1 flex flex-col overflow-hidden bg-background-dark" >
                 <header className="h-16 flex items-center justify-between border-b border-[#234832] bg-[#112218] px-8 shrink-0">
                     <h2 className="text-white text-lg font-bold tracking-tight uppercase">
                         {activeTab === 'ADD_PRODUCT' ? 'Adicionar Produto' : activeTab === 'DASHBOARD' ? 'Dashboard' : activeTab}
@@ -715,8 +700,8 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
                     )}
 
                 </div>
-            </main>
-        </div>
+            </main >
+        </div >
     );
 };
 
