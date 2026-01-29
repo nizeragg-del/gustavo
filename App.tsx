@@ -69,8 +69,8 @@ const AppContent: React.FC = () => {
   const [authError, setAuthError] = useState<string | null>(null);
 
   // Fetch Data
-  const fetchData = async () => {
-    setIsLoading(true);
+  const fetchData = async (silent = false) => {
+    if (!silent) setIsLoading(true);
     try {
       const { data: productsData } = await supabase.from('arena_products').select('*');
       const { data: ordersData } = await supabase.from('arena_orders').select('*, arena_order_items(*)');
@@ -101,7 +101,7 @@ const AppContent: React.FC = () => {
 
       if (ordersData) {
         setOrders(ordersData.map(o => ({
-          id: `#${o.id.slice(0, 5)}`,
+          id: String(o.id).startsWith('#') ? o.id : `#${o.id.slice(0, 5)}`,
           date: new Date(o.created_at).toLocaleDateString(),
           status: o.status === 'delivered' ? 'Entregue' : 'Processando',
           total: Number(o.total_amount),
@@ -111,7 +111,7 @@ const AppContent: React.FC = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
-      setIsLoading(false);
+      if (!silent) setIsLoading(false);
     }
   };
 

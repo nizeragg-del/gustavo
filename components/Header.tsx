@@ -10,6 +10,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ setCurrentPage, cartCount, onCategorySelect, onProfileClick }) => {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const handleNavClick = (filter: string) => {
     if (onCategorySelect) {
@@ -21,10 +22,13 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage, cartCount, onCategorySe
 
   return (
     <header className="sticky top-0 z-50 flex items-center justify-between border-b border-slate-100 bg-white/95 backdrop-blur-md px-6 md:px-10 lg:px-40 py-4 shadow-sm">
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-4 md:gap-8">
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden flex items-center justify-center h-10 w-10 text-slate-900">
+          <span className="material-symbols-outlined text-2xl">{isMenuOpen ? 'close' : 'menu'}</span>
+        </button>
         <button onClick={() => setCurrentPage('HOME')} className="flex items-center gap-2 group">
-          <span className="material-symbols-outlined text-4xl text-primary group-hover:scale-110 transition-transform">sports_soccer</span>
-          <h2 className="text-slate-900 text-xl font-black leading-tight tracking-tight uppercase italic">Arena Golaço</h2>
+          <span className="material-symbols-outlined text-3xl md:text-4xl text-primary group-hover:scale-110 transition-transform">sports_soccer</span>
+          <h1 className="text-slate-900 text-lg md:text-xl font-black leading-tight tracking-tight uppercase italic">Arena Golaço</h1>
         </button>
         <nav className="hidden md:flex items-center gap-6">
           <button onClick={() => handleNavClick('Nacional')} className="text-slate-500 hover:text-primary transition-colors text-sm font-bold uppercase tracking-tight">Nacionais</button>
@@ -67,6 +71,16 @@ const Header: React.FC<HeaderProps> = ({ setCurrentPage, cartCount, onCategorySe
           </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="absolute top-20 left-0 w-full bg-white border-b border-slate-100 p-6 flex flex-col gap-4 md:hidden animate-slide-down z-40 shadow-xl">
+          <button onClick={() => { handleNavClick('Nacional'); setIsMenuOpen(false); }} className="text-left py-3 border-b border-slate-50 text-slate-900 font-bold uppercase text-xs tracking-widest">Nacionais</button>
+          <button onClick={() => { handleNavClick('Internacional'); setIsMenuOpen(false); }} className="text-left py-3 border-b border-slate-50 text-slate-900 font-bold uppercase text-xs tracking-widest">Internacionais</button>
+          <button onClick={() => { handleNavClick('Retrô'); setIsMenuOpen(false); }} className="text-left py-3 border-b border-slate-50 text-slate-900 font-bold uppercase text-xs tracking-widest">Retrô</button>
+          <button onClick={() => { handleNavClick('Seleções'); setIsMenuOpen(false); }} className="text-left py-3 border-b border-slate-50 text-slate-900 font-bold uppercase text-xs tracking-widest">Seleções</button>
+        </div>
+      )}
     </header>
   );
 };

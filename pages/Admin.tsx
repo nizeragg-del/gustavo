@@ -12,7 +12,7 @@ interface AdminProps {
     onAddProduct?: (product: Product) => void;
     onEditProduct?: (product: Product) => void;
     onUpdateStatus?: (orderId: string, status: string) => void;
-    onUpdateBanners?: () => void;
+    onUpdateBanners?: (silent?: boolean) => void;
     onNavigateHome?: () => void;
 }
 
@@ -139,6 +139,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
 
     // New States for Features
     const [editingId, setEditingId] = useState<number | null>(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [dateFilter, setDateFilter] = useState<'all' | '7days'>('all');
 
     const [clients, setClients] = useState<Client[]>([]);
@@ -389,18 +390,31 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
         );
     }
     return (
-        <div className="flex h-screen overflow-hidden bg-white text-slate-900 font-sans">
+        <div className="flex h-screen overflow-hidden bg-slate-50 text-slate-900 font-sans">
+            {/* Mobile Overlay */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 lg:hidden animate-fade-in"
+                    onClick={() => setIsSidebarOpen(false)}
+                ></div>
+            )}
+
             {/* Sidebar */}
-            <aside className="w-80 flex-shrink-0 border-r border-slate-100 bg-white flex flex-col justify-between p-8">
+            <aside className={`fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col justify-between p-8 transition-transform duration-300 lg:static lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="flex flex-col gap-12">
-                    <div className="flex gap-4 items-center">
-                        <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center border-2 border-primary/20 text-primary shadow-inner">
-                            <span className="material-symbols-outlined text-2xl font-black">sports_soccer</span>
+                    <div className="flex justify-between items-center lg:block">
+                        <div className="flex gap-4 items-center">
+                            <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center border-2 border-primary/20 text-primary shadow-inner">
+                                <span className="material-symbols-outlined text-2xl font-black">sports_soccer</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <h1 className="text-slate-900 text-xl font-black uppercase italic tracking-tighter leading-none">Arena Golaço</h1>
+                                <p className="text-[10px] font-black text-primary uppercase tracking-widest mt-1 italic">Admin Dashboard</p>
+                            </div>
                         </div>
-                        <div className="flex flex-col">
-                            <h1 className="text-slate-900 text-xl font-black uppercase italic tracking-tighter leading-none">Arena Golaço</h1>
-                            <p className="text-[10px] font-black text-primary uppercase tracking-widest mt-1 italic">Admin Dashboard</p>
-                        </div>
+                        <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden size-10 flex items-center justify-center text-slate-400">
+                            <span className="material-symbols-outlined font-black">close</span>
+                        </button>
                     </div>
                     <nav className="flex flex-col gap-3">
                         {[
@@ -412,8 +426,11 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                         ].map(item => (
                             <button
                                 key={item.id}
-                                onClick={() => setActiveTab(item.id as any)}
-                                className={`flex items-center gap-5 px-6 py-4 rounded-2xl font-black uppercase italic text-xs tracking-widest transition-all ${activeTab === item.id ? 'bg-primary text-white shadow-lg shadow-primary/20 translate-x-1' : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900'}`}
+                                onClick={() => {
+                                    setActiveTab(item.id as any);
+                                    setIsSidebarOpen(false);
+                                }}
+                                className={`flex items-center gap-5 px-6 py-4 rounded-2xl font-black uppercase italic text-xs tracking-widest transition-all ${activeTab === item.id ? 'bg-primary text-white shadow-lg shadow-primary/20 translate-x-1' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}
                             >
                                 <span className="material-symbols-outlined font-black text-xl">{item.icon}</span>
                                 {item.label}
@@ -423,7 +440,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                 </div>
 
                 <div className="space-y-6">
-                    <button onClick={() => setActiveTab('ADD_PRODUCT')} className="flex w-full cursor-pointer items-center justify-center rounded-2xl h-14 bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] italic hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10 hover:scale-[1.02]">
+                    <button onClick={() => { setActiveTab('ADD_PRODUCT'); setIsSidebarOpen(false); }} className="flex w-full cursor-pointer items-center justify-center rounded-2xl h-14 bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] italic hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10 hover:scale-[1.02]">
                         <span className="material-symbols-outlined mr-3 text-lg font-black">add_circle</span> Novo Produto
                     </button>
 
@@ -436,13 +453,18 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
 
             {/* Content */}
             <main className="flex-1 flex flex-col overflow-hidden bg-slate-50" >
-                <header className="h-24 flex items-center justify-between bg-white border-b border-slate-100 px-10 shrink-0">
-                    <h2 className="text-slate-900 text-2xl font-black uppercase italic tracking-tighter">
-                        {activeTab === 'ADD_PRODUCT' ? (editingId ? 'Editar Produto' : 'Adicionar Produto') : activeTab === 'DASHBOARD' ? 'Dashboard' : activeTab}
-                    </h2>
+                <header className="h-24 flex items-center justify-between bg-white border-b border-slate-200 px-6 md:px-10 shrink-0">
+                    <div className="flex items-center gap-4">
+                        <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden size-12 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-900 border border-slate-200">
+                            <span className="material-symbols-outlined font-black">menu</span>
+                        </button>
+                        <h2 className="text-slate-900 text-xl md:text-2xl font-black uppercase italic tracking-tighter">
+                            {activeTab === 'ADD_PRODUCT' ? (editingId ? 'Editar Produto' : 'Adicionar Produto') : activeTab === 'DASHBOARD' ? 'Dashboard' : activeTab}
+                        </h2>
+                    </div>
 
                     {activeTab === 'DASHBOARD' && (
-                        <div className="flex-1 max-w-2xl mx-12 relative group">
+                        <div className="flex-1 max-w-2xl mx-12 relative group hidden lg:block">
                             <span className="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 font-black group-focus-within:text-primary transition-colors">search</span>
                             <input className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-16 pr-6 text-sm text-slate-900 font-bold italic placeholder:text-slate-300 focus:outline-none focus:border-primary/50 focus:bg-white transition-all" placeholder="Buscar pedidos, produtos ou clientes..." />
                         </div>
@@ -494,9 +516,9 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                                     { label: 'Ticket Médio', val: `R$ ${(totalRevenue / (orders.length || 1)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, trend: '+8%', icon: 'analytics', good: true },
                                     { label: 'Pendentes de Envio', val: orders.filter(o => o.status !== 'Entregue').length.toString(), trend: '0%', icon: 'local_shipping', good: false, trendLabel: 'estável' },
                                 ].map((kpi, i) => (
-                                    <div key={i} className="flex flex-col gap-4 rounded-[2.5rem] p-8 border border-slate-100 bg-white hover:border-primary/20 transition-all shadow-xl shadow-slate-200/40 group">
+                                    <div key={i} className="flex flex-col gap-4 rounded-[2.5rem] p-8 border border-slate-200 bg-white hover:border-primary/40 transition-all shadow-xl shadow-slate-200/50 group">
                                         <div className="flex justify-between items-start">
-                                            <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest italic">{kpi.label}</p>
+                                            <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest italic">{kpi.label}</p>
                                             <div className="size-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-white transition-all">
                                                 <span className="material-symbols-outlined font-black text-xl">{kpi.icon}</span>
                                             </div>
@@ -507,7 +529,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                                                 <span className="material-symbols-outlined text-[12px] font-black">{kpi.good ? 'trending_up' : 'trending_flat'}</span>
                                                 {kpi.trend}
                                             </div>
-                                            <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest italic">{kpi.trendLabel || 'vs ontem'}</span>
+                                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest italic">{kpi.trendLabel || 'vs ontem'}</span>
                                         </div>
                                     </div>
                                 ))}
@@ -574,7 +596,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                                 {/* Best Sellers */}
-                                <div className="lg:col-span-2 rounded-[3.5rem] border border-slate-100 bg-white shadow-2xl shadow-slate-200/30 overflow-hidden flex flex-col">
+                                <div className="lg:col-span-2 rounded-[3.5rem] border border-slate-200 bg-white shadow-2xl shadow-slate-200/40 overflow-hidden flex flex-col">
                                     <div className="px-10 py-8 border-b border-slate-50 flex justify-between items-center bg-white/50 backdrop-blur-sm">
                                         <h3 className="text-xl font-black text-slate-900 uppercase italic tracking-tighter">Artilheiros de Venda</h3>
                                         <button className="text-primary text-[10px] font-black uppercase tracking-widest italic hover:underline">Ver Tabela Completa</button>
@@ -622,7 +644,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                                 </div>
 
                                 {/* Recent Activity */}
-                                <div className="lg:col-span-1 rounded-[3.5rem] border border-slate-100 bg-white shadow-2xl shadow-slate-200/30 flex flex-col relative overflow-hidden">
+                                <div className="lg:col-span-1 rounded-[3.5rem] border border-slate-200 bg-white shadow-2xl shadow-slate-200/40 flex flex-col relative overflow-hidden">
                                     <div className="px-10 py-8 border-b border-slate-50 flex justify-between items-center bg-white/50 backdrop-blur-sm relative">
                                         <h3 className="text-xl font-black text-slate-900 uppercase italic tracking-tighter">Histórico do Jogo</h3>
                                         <div className="size-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-primary transition-all cursor-pointer">
@@ -667,7 +689,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
 
                     {activeTab === 'PRODUCTS' && (
                         <div className="animate-fade-in space-y-6">
-                            <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden">
+                            <div className="bg-white rounded-[2.5rem] border border-slate-200/60 shadow-xl shadow-slate-200/50 overflow-hidden">
                                 <table className="w-full text-left">
                                     <thead className="bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest italic border-b border-slate-100">
                                         <tr>
@@ -681,7 +703,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                                     <tbody className="divide-y divide-slate-50">
                                         {products.map(p => (
                                             <tr key={p.id} className="hover:bg-slate-50/50 transition-all group">
-                                                <td className="px-8 py-6 text-slate-400 font-black text-[10px] uppercase tracking-tighter">#{p.id.slice(0, 8)}</td>
+                                                <td className="px-8 py-6 text-slate-500 font-black text-[10px] uppercase tracking-tighter">#{String(p.id).slice(0, 8)}</td>
                                                 <td className="px-8 py-6 flex items-center gap-4">
                                                     <div className="size-12 rounded-xl bg-slate-100 border border-slate-100 overflow-hidden group-hover:scale-110 transition-transform">
                                                         <img src={p.image} className="w-full h-full object-cover" />
@@ -710,7 +732,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                     {activeTab === 'ADD_PRODUCT' && (
                         <div className="max-w-4xl animate-fade-in pb-12">
                             <form onSubmit={handleSubmitProduct} className="space-y-8">
-                                <div className="bg-white p-12 rounded-[3.5rem] border border-slate-100 shadow-2xl shadow-slate-200/40 space-y-10 relative overflow-hidden">
+                                <div className="bg-white p-12 rounded-[3.5rem] border border-slate-200 shadow-2xl shadow-slate-200/50 space-y-10 relative overflow-hidden">
                                     <div className="absolute top-0 right-0 size-64 bg-primary/5 rounded-full -mr-32 -mt-32"></div>
 
                                     <div className="relative">
@@ -812,7 +834,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
 
                     {activeTab === 'ORDERS' && (
                         <div className="animate-fade-in space-y-6">
-                            <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden">
+                            <div className="bg-white rounded-[2.5rem] border border-slate-200/60 shadow-xl shadow-slate-200/50 overflow-hidden">
                                 <table className="w-full text-left">
                                     <thead className="bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest italic border-b border-slate-100">
                                         <tr>
@@ -893,7 +915,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                                                     defaultValue={banner.image_url}
                                                     onBlur={async (e) => {
                                                         await supabase.from('arena_banners').update({ image_url: e.target.value }).eq('id', banner.id);
-                                                        onUpdateBanners?.();
+                                                        onUpdateBanners?.(true);
                                                     }}
                                                     placeholder="URL da Imagem..."
                                                 />
@@ -955,7 +977,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                                                             defaultValue={banner.button_primary_link}
                                                             onChange={async (e) => {
                                                                 await supabase.from('arena_banners').update({ button_primary_link: e.target.value }).eq('id', banner.id);
-                                                                onUpdateBanners?.();
+                                                                onUpdateBanners?.(true);
                                                             }}
                                                         >
                                                             <option value="">Destino Coleção...</option>
@@ -1004,7 +1026,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
                                                         defaultValue={banner.display_duration || 5000}
                                                         onBlur={async (e) => {
                                                             await supabase.from('arena_banners').update({ display_duration: parseInt(e.target.value) }).eq('id', banner.id);
-                                                            onUpdateBanners?.();
+                                                            onUpdateBanners?.(true);
                                                         }}
                                                     />
                                                 </div>
@@ -1020,7 +1042,7 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [],
 
                     {activeTab === 'CLIENTS' && (
                         <div className="animate-fade-in space-y-6">
-                            <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden">
+                            <div className="bg-white rounded-[2.5rem] border border-slate-200/60 shadow-xl shadow-slate-200/50 overflow-hidden">
                                 <table className="w-full text-left">
                                     <thead className="bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest italic border-b border-slate-100">
                                         <tr>
