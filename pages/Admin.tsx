@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, AreaChart, Area, Cell } from 'recharts';
-import { Order, Product, Client } from '../types';
+import { Order, Product, Client, Banner } from '../types';
 import { supabase } from '../lib/supabase';
 
-type AdminTab = 'DASHBOARD' | 'PRODUCTS' | 'ADD_PRODUCT' | 'ORDERS' | 'CLIENTS' | 'REPORTS';
+type AdminTab = 'DASHBOARD' | 'PRODUCTS' | 'ADD_PRODUCT' | 'ORDERS' | 'CLIENTS' | 'REPORTS' | 'BANNERS';
 
 interface AdminProps {
     products?: Product[];
     orders?: Order[];
+    banners?: Banner[];
     onAddProduct?: (product: Product) => void;
     onEditProduct?: (product: Product) => void;
     onUpdateStatus?: (orderId: string, status: string) => void;
+    onUpdateBanners?: () => void;
     onNavigateHome?: () => void;
 }
 
-const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct, onEditProduct, onUpdateStatus, onNavigateHome }) => {
+const Admin: React.FC<AdminProps> = ({ products = [], orders = [], banners = [], onAddProduct, onEditProduct, onUpdateStatus, onUpdateBanners, onNavigateHome }) => {
     const [activeTab, setActiveTab] = useState<AdminTab>('DASHBOARD');
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -400,6 +402,10 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
                         <button onClick={() => setActiveTab('CLIENTS')} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition-all ${activeTab === 'CLIENTS' ? 'bg-primary text-background-dark' : 'text-[#92c9a8] hover:bg-[#234832] hover:text-white'}`}>
                             <span className="material-symbols-outlined">group</span>
                             <p className="text-sm">Clientes</p>
+                        </button>
+                        <button onClick={() => setActiveTab('BANNERS')} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition-all ${activeTab === 'BANNERS' ? 'bg-primary text-background-dark' : 'text-[#92c9a8] hover:bg-[#234832] hover:text-white'}`}>
+                            <span className="material-symbols-outlined">view_carousel</span>
+                            <p className="text-sm">Hero / Banners</p>
                         </button>
                     </nav>
                 </div>
@@ -793,6 +799,103 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
                                         ))}
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'BANNERS' && (
+                        <div className="animate-fade-in space-y-8">
+                            <div className="flex justify-between items-center">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-white">Gerenciamento do Hero</h2>
+                                    <p className="text-[#92c9a8]">Edite os banners, textos e links que aparecem na home do site.</p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-8">
+                                {banners.map((banner, idx) => (
+                                    <div key={banner.id} className="bg-[#112218]/50 border border-[#326747] rounded-2xl p-6 md:p-8 flex flex-col lg:flex-row gap-8">
+                                        {/* Image Preview */}
+                                        <div className="w-full lg:w-1/3 shrink-0">
+                                            <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-3">Preview da Imagem</label>
+                                            <div className="aspect-video rounded-xl overflow-hidden border border-[#326747] relative group">
+                                                <img src={banner.image_url} alt={banner.title} className="w-full h-full object-cover" />
+                                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <button className="bg-primary text-background-dark px-4 py-2 rounded-lg font-bold text-xs uppercase">Alterar Imagem</button>
+                                                </div>
+                                            </div>
+                                            <input
+                                                className="mt-4 w-full bg-[#1e382a] border border-[#326747] rounded-lg py-2 px-4 text-xs text-white"
+                                                defaultValue={banner.image_url}
+                                                onBlur={async (e) => {
+                                                    await supabase.from('arena_banners').update({ image_url: e.target.value }).eq('id', banner.id);
+                                                    onUpdateBanners?.();
+                                                    alert("Imagem atualizada!");
+                                                }}
+                                                placeholder="URL da Imagem..."
+                                            />
+                                        </div>
+
+                                        {/* Fields */}
+                                        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Tag (Badge)</label>
+                                                <input
+                                                    className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
+                                                    defaultValue={banner.tag}
+                                                    onBlur={async (e) => {
+                                                        await supabase.from('arena_banners').update({ tag: e.target.value }).eq('id', banner.id);
+                                                        onUpdateBanners?.();
+                                                    }}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Título do Banner</label>
+                                                <input
+                                                    className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
+                                                    defaultValue={banner.title}
+                                                    onBlur={async (e) => {
+                                                        await supabase.from('arena_banners').update({ title: e.target.value }).eq('id', banner.id);
+                                                        onUpdateBanners?.();
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Descrição / Subtítulo</label>
+                                                <textarea
+                                                    className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none h-24 resize-none"
+                                                    defaultValue={banner.subtitle}
+                                                    onBlur={async (e) => {
+                                                        await supabase.from('arena_banners').update({ subtitle: e.target.value }).eq('id', banner.id);
+                                                        onUpdateBanners?.();
+                                                    }}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Botão Primário (Texto)</label>
+                                                <input
+                                                    className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
+                                                    defaultValue={banner.button_primary_text}
+                                                    onBlur={async (e) => {
+                                                        await supabase.from('arena_banners').update({ button_primary_text: e.target.value }).eq('id', banner.id);
+                                                        onUpdateBanners?.();
+                                                    }}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-[#92c9a8] mb-2">Botão Primário (Link)</label>
+                                                <input
+                                                    className="w-full bg-[#1e382a] border border-[#326747] rounded-lg py-3 px-4 text-white focus:border-primary outline-none"
+                                                    defaultValue={banner.button_primary_link}
+                                                    onBlur={async (e) => {
+                                                        await supabase.from('arena_banners').update({ button_primary_link: e.target.value }).eq('id', banner.id);
+                                                        onUpdateBanners?.();
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     )}

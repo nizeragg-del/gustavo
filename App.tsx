@@ -13,7 +13,7 @@ import HelpCenter from './pages/HelpCenter';
 import Exchanges from './pages/Exchanges';
 import Contact from './pages/Contact';
 import Privacy from './pages/Privacy';
-import { CartItem, Product, Order } from './types';
+import { CartItem, Product, Order, Banner } from './types';
 import { supabase } from './lib/supabase';
 
 // Stable Layout Component (Defined Outside)
@@ -57,6 +57,7 @@ const AppContent: React.FC = () => {
   // Data State
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [banners, setBanners] = useState<Banner[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
@@ -73,6 +74,11 @@ const AppContent: React.FC = () => {
     try {
       const { data: productsData } = await supabase.from('arena_products').select('*');
       const { data: ordersData } = await supabase.from('arena_orders').select('*, arena_order_items(*)');
+      const { data: bannersData } = await supabase.from('arena_banners').select('*').order('priority', { ascending: true });
+
+      if (bannersData) {
+        setBanners(bannersData);
+      }
 
       if (productsData) {
         setProducts(productsData.map(p => ({
@@ -321,7 +327,7 @@ const AppContent: React.FC = () => {
           onProfileClick={handleProfileClick}
           onNavigateHome={() => navigate('/')}
         />}>
-          <Route index element={<Home products={products} onProductClick={handleProductClick} onAddToCart={handleAddToCart} onNavigate={(p) => navigate(p === 'HOME' ? '/' : `/${p.toLowerCase()}`)} />} />
+          <Route index element={<Home products={products} banners={banners} onProductClick={handleProductClick} onAddToCart={handleAddToCart} onNavigate={(p) => navigate(p === 'HOME' ? '/' : `/${p.toLowerCase()}`)} />} />
           <Route path="categories" element={<Categories products={products} initialFilter={categoryFilter} onProductClick={handleProductClick} onAddToCart={handleAddToCart} />} />
           <Route path="product/:id" element={selectedProduct ? <ProductPage product={selectedProduct} onAddToCart={handleAddToCart} /> : <Navigate to="/" />} />
           <Route path="cart" element={<Cart cart={cart} setCurrentPage={(p) => navigate(p === 'HOME' ? '/' : `/${p.toLowerCase()}`)} isLoggedIn={!!user} onFinalize={handleFinalizeOrder} />} />
@@ -331,7 +337,7 @@ const AppContent: React.FC = () => {
           <Route path="contact" element={<Contact />} />
           <Route path="privacy" element={<Privacy />} />
         </Route>
-        <Route path="/admin" element={<Admin products={products} orders={orders} onAddProduct={handleAddProduct} onEditProduct={handleEditProduct} onUpdateStatus={handleUpdateOrderStatus} onNavigateHome={() => navigate('/')} />} />
+        <Route path="/admin" element={<Admin products={products} orders={orders} banners={banners} onAddProduct={handleAddProduct} onEditProduct={handleEditProduct} onUpdateStatus={handleUpdateOrderStatus} onUpdateBanners={fetchData} onNavigateHome={() => navigate('/')} />} />
       </Routes>
 
       <AuthPopup

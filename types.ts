@@ -60,3 +60,17 @@ export interface Client {
   ordersCount: number;
   lastOrder: string;
 }
+
+export interface Banner {
+  id: string;
+  tag: string;
+  title: string;
+  subtitle: string;
+  image_url: string;
+  button_primary_text: string;
+  button_primary_link: string;
+  button_secondary_text: string;
+  button_secondary_link: string;
+  priority: number;
+  active: boolean;
+}
