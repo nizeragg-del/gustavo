@@ -51,7 +51,12 @@ const AppContent: React.FC = () => {
           category: p.category || 'Clubes',
           subcategory: p.subcategory || 'Nacional',
           isNew: p.is_new,
-          stock: p.stock_quantity
+          stock: p.stock_quantity,
+          inventory: p.inventory,
+          weight: p.weight,
+          height: p.height,
+          width: p.width,
+          length: p.length
         })));
       }
 
@@ -200,7 +205,12 @@ const AppContent: React.FC = () => {
         category: newProduct.category,
         subcategory: newProduct.subcategory,
         is_new: true,
-        stock_quantity: 100
+        stock_quantity: newProduct.stock || 100,
+        inventory: newProduct.inventory,
+        weight: newProduct.weight || 0.3,
+        height: newProduct.height || 5,
+        width: newProduct.width || 20,
+        length: newProduct.length || 30
       }).select().single();
 
       if (error) throw error;
@@ -224,6 +234,11 @@ const AppContent: React.FC = () => {
         image_url: product.image,
         category: product.category,
         subcategory: product.subcategory,
+        inventory: product.inventory,
+        weight: product.weight,
+        height: product.height,
+        width: product.width,
+        length: product.length
       }).eq('id', product.id);
 
       if (error) throw error;

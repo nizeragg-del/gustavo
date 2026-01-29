@@ -11,15 +11,65 @@ interface CartProps {
 const Cart: React.FC<CartProps> = ({ cart, setCurrentPage, isLoggedIn, onFinalize }) => {
     const [cep, setCep] = React.useState('');
     const [shippingCost, setShippingCost] = React.useState<number | null>(null);
+    const [shippingOptions, setShippingOptions] = React.useState<any[]>([]);
+    const [loadingShipping, setLoadingShipping] = React.useState(false);
 
     const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
     const total = subtotal + (shippingCost || 0);
 
-    const handleCalculateShipping = () => {
-        if (cep.length === 8) {
-            // Basic mock logic: 15.00 for SP, 25.00 for others
-            const cost = cep.startsWith('0') ? 15.90 : 25.90;
-            setShippingCost(cost);
+    const handleCalculateShipping = async () => {
+        if (cep.length !== 8) return;
+
+        setLoadingShipping(true);
+        try {
+            const token = import.meta.env.VITE_MELHOR_ENVIO_TOKEN;
+            const fromCep = import.meta.env.VITE_FROM_CEP || '01001000'; // Default to SP if not set
+
+            const products = cart.map(item => ({
+                id: item.id.toString(),
+                width: item.width || 20,
+                height: item.height || 5,
+                length: item.length || 30,
+                weight: item.weight || 0.3,
+                insurance_value: item.price,
+                quantity: item.quantity
+            }));
+
+            const response = await fetch('https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    from: { postal_code: fromCep },
+                    to: { postal_code: cep },
+                    products
+                })
+            });
+
+            const data = await response.json();
+
+            if (Array.isArray(data)) {
+                // Filter relevant services (SEDEX, PAC often have specific IDs or just look for valid price)
+                // Melhor Envio returns an array of services. Some might be error or restricted.
+                const validOptions = data.filter((opt: any) => !opt.error && opt.price);
+                setShippingOptions(validOptions);
+                if (validOptions.length > 0) {
+                    setShippingCost(Number(validOptions[0].price)); // Default to first (cheapest usually?)
+                } else {
+                    alert('Nenhuma opção de frete disponível para este CEP.');
+                }
+            } else {
+                console.error('Shipping API Error:', data);
+                alert('Erro ao calcular frete. Verifique o CEP.');
+            }
+        } catch (error) {
+            console.error('Error calculating shipping:', error);
+            alert('Erro de conexão com serviço de frete.');
+        } finally {
+            setLoadingShipping(false);
         }
     };
 
@@ -129,6 +179,31 @@ const Cart: React.FC<CartProps> = ({ cart, setCurrentPage, isLoggedIn, onFinaliz
                                 </button>
                             </div>
                         </div>
+                        {loadingShipping && <p className="text-xs text-primary mt-2">Calculando...</p>}
+
+                        {/* Shipping Options List */}
+                        {shippingOptions.length > 0 && (
+                            <div className="mt-4 space-y-2">
+                                {shippingOptions.map((opt: any) => (
+                                    <label key={opt.id} className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${Number(opt.price) === shippingCost ? 'bg-primary/10 border-primary' : 'bg-background-dark/50 border-white/10 hover:border-white/30'}`}>
+                                        <div className="flex items-center gap-3">
+                                            <input
+                                                type="radio"
+                                                name="shipping"
+                                                checked={Number(opt.price) === shippingCost}
+                                                onChange={() => setShippingCost(Number(opt.price))}
+                                                className="accent-primary"
+                                            />
+                                            <div>
+                                                <p className="font-bold text-sm text-white">{opt.name}</p>
+                                                <p className="text-xs text-slate-400">Chega em até {opt.delivery_time} dias</p>
+                                            </div>
+                                        </div>
+                                        <span className="font-bold text-primary">R$ {Number(opt.price).toFixed(2)}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        )}
 
                         <div className="mb-8">
                             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Cupom</label>

@@ -12,6 +12,11 @@ export interface Product {
   isNew?: boolean;
   images?: string[];
   stock?: number;
+  inventory?: Record<string, number>; // {"P": 10, "M": 5}
+  weight?: number;
+  height?: number;
+  width?: number;
+  length?: number;
 }
 
 export interface CartItem extends Product {

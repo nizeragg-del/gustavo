@@ -114,7 +114,12 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
     // Form State for Add Product
     const [newProduct, setNewProduct] = useState<Partial<Product>>({
         category: 'Clubes',
-        subcategory: 'Nacional'
+        subcategory: 'Nacional',
+        inventory: { P: 0, M: 0, G: 0, GG: 0, XG: 0 },
+        weight: 0.3,
+        height: 5,
+        width: 20,
+        length: 30
     });
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
@@ -160,7 +165,12 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
             price: product.price,
             image: product.image,
             category: product.category,
-            subcategory: product.subcategory || 'Nacional'
+            subcategory: product.subcategory || 'Nacional',
+            inventory: product.inventory || { P: 0, M: 0, G: 0, GG: 0, XG: 0 },
+            weight: product.weight || 0.3,
+            height: product.height || 5,
+            width: product.width || 20,
+            length: product.length || 30
         });
         setActiveTab('ADD_PRODUCT');
     };
@@ -216,7 +226,13 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
                 image: checkImageUrl,
                 category: newProduct.category || "Clubes",
                 subcategory: newProduct.subcategory || "Nacional",
-                isNew: true
+                isNew: true,
+                inventory: newProduct.inventory,
+                weight: newProduct.weight,
+                height: newProduct.height,
+                width: newProduct.width,
+                length: newProduct.length,
+                stock: Object.values(newProduct.inventory || {}).reduce((a: number, b: number) => a + b, 0)
             };
 
             if (editingId && onEditProduct) {
@@ -227,7 +243,17 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
             }
 
             setActiveTab('PRODUCTS');
-            setNewProduct({ category: 'Clubes', subcategory: 'Nacional', image: '' }); // Reset
+            setActiveTab('PRODUCTS');
+            setNewProduct({
+                category: 'Clubes',
+                subcategory: 'Nacional',
+                image: '',
+                inventory: { P: 0, M: 0, G: 0, GG: 0, XG: 0 },
+                weight: 0.3,
+                height: 5,
+                width: 20,
+                length: 30
+            }); // Reset
             setSelectedFile(null);
         } catch (error: any) {
             console.error("Upload error:", error);
@@ -659,6 +685,51 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
                                                 />
                                             </div>
                                             {/* Fallback URL input hidden or optional if needed, but removing for now as per user request to 'alterar' */}
+                                        </div>
+                                    </div>
+
+                                    {/* Dimensions Section */}
+                                    <div className="border-t border-[#326747] pt-6">
+                                        <h3 className="text-[#92c9a8] font-bold text-sm uppercase mb-4">Dimensões para Frete</h3>
+                                        <div className="grid grid-cols-4 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-[#5e8b72] mb-1">Peso (kg)</label>
+                                                <input type="number" step="0.1" value={newProduct.weight} onChange={e => setNewProduct({ ...newProduct, weight: parseFloat(e.target.value) })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-3 py-2 text-white focus:border-primary outline-none" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-[#5e8b72] mb-1">Altura (cm)</label>
+                                                <input type="number" value={newProduct.height} onChange={e => setNewProduct({ ...newProduct, height: parseFloat(e.target.value) })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-3 py-2 text-white focus:border-primary outline-none" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-[#5e8b72] mb-1">Largura (cm)</label>
+                                                <input type="number" value={newProduct.width} onChange={e => setNewProduct({ ...newProduct, width: parseFloat(e.target.value) })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-3 py-2 text-white focus:border-primary outline-none" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase text-[#5e8b72] mb-1">Comprimento (cm)</label>
+                                                <input type="number" value={newProduct.length} onChange={e => setNewProduct({ ...newProduct, length: parseFloat(e.target.value) })} className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-3 py-2 text-white focus:border-primary outline-none" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Inventory Section */}
+                                    <div className="border-t border-[#326747] pt-6">
+                                        <h3 className="text-[#92c9a8] font-bold text-sm uppercase mb-4">Estoque por Tamanho</h3>
+                                        <div className="grid grid-cols-5 gap-4">
+                                            {['P', 'M', 'G', 'GG', 'XG'].map(size => (
+                                                <div key={size}>
+                                                    <label className="block text-xs font-bold uppercase text-[#5e8b72] mb-1">{size}</label>
+                                                    <input
+                                                        type="number"
+                                                        min="0"
+                                                        value={newProduct.inventory?.[size] || 0}
+                                                        onChange={e => setNewProduct({
+                                                            ...newProduct,
+                                                            inventory: { ...newProduct.inventory, [size]: parseInt(e.target.value) || 0 }
+                                                        })}
+                                                        className="w-full bg-[#234832]/30 border border-[#326747] rounded-lg px-3 py-2 text-white focus:border-primary outline-none text-center"
+                                                    />
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                     <div className="flex justify-end gap-4 pt-4 border-t border-[#326747]">
