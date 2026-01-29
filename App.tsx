@@ -160,6 +160,12 @@ const App: React.FC = () => {
     }
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setCurrentPage('HOME');
+  };
+
   const handleFinalizeOrder = async () => {
     if (!user) {
       setShowAuthPopup(true);
@@ -238,11 +244,11 @@ const App: React.FC = () => {
           />
         );
       case 'PROFILE':
-        return <Profile orders={orders} />;
+        return <Profile user={user} orders={orders} onLogout={handleLogout} />;
       case 'ADMIN':
         return <Admin products={products} orders={orders} onAddProduct={handleAddProduct} onUpdateStatus={handleUpdateOrderStatus} onNavigateHome={() => setCurrentPage('HOME')} />;
       case 'ORDERS':
-        return <Profile orders={orders} initialTab="ORDERS" />;
+        return <Profile user={user} orders={orders} initialTab="ORDERS" onLogout={handleLogout} />;
       case 'HELP':
         return <HelpCenter />;
       case 'EXCHANGES':
