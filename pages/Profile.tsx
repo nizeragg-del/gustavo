@@ -20,7 +20,8 @@ const Profile: React.FC<ProfileProps> = ({ user: authUser, orders, initialTab = 
         email: authUser?.email || "",
         phone: "",
         cpf: "",
-        addresses: []
+        addresses: [],
+        isLoading: true
     });
 
     const [isEditing, setIsEditing] = useState(false);
@@ -39,23 +40,38 @@ const Profile: React.FC<ProfileProps> = ({ user: authUser, orders, initialTab = 
                     .single();
 
                 if (data) {
+                    const addresses: Address[] = [];
+                    if (data.address) {
+                        // Se for um array de endereços (novo formato)
+                        if (Array.isArray(data.address)) {
+                            addresses.push(...data.address);
+                        } else {
+                            // Se for o formato antigo/cadastro (objeto único)
+                            addresses.push({
+                                id: 1,
+                                name: 'Principal',
+                                street: data.address.street || '',
+                                number: data.address.number || '',
+                                district: data.address.district || '',
+                                city: data.address.city || '',
+                                state: data.address.state || '',
+                                zip: data.address.zip || '',
+                                isDefault: true
+                            });
+                        }
+                    }
+
                     setUser(prev => ({
                         ...prev,
                         name: data.full_name || prev.name,
                         email: data.email || prev.email,
                         phone: data.phone || "",
                         cpf: data.cpf || "",
-                        // Map single address jsonb to array if exists
-                        addresses: data.address ? [{
-                            id: 1,
-                            name: 'Principal',
-                            street: data.address.street || '',
-                            district: data.address.district || '',
-                            city: `${data.address.city || ''}/${data.address.state || ''}`,
-                            zip: data.address.zip || '',
-                            isDefault: true
-                        }] : []
+                        addresses: addresses,
+                        isLoading: false
                     }));
+                } else {
+                    setUser(prev => ({ ...prev, isLoading: false }));
                 }
             } catch (err) {
                 console.error("Error fetching profile:", err);
@@ -73,46 +89,53 @@ const Profile: React.FC<ProfileProps> = ({ user: authUser, orders, initialTab = 
                 .update({
                     full_name: user.name,
                     phone: user.phone,
-                    cpf: user.cpf
+                    cpf: user.cpf,
+                    address: user.addresses // Salva o array completo de endereços
                 })
                 .eq('id', authUser.id);
 
             if (error) throw error;
-            alert("Dados atualizados com sucesso!");
+            alert("Dados e endereços atualizados com sucesso!");
         } catch (e: any) {
             alert("Erro ao atualizar: " + e.message);
         }
     };
 
-    const handleAddAddress = () => {
-        if (newAddress.street) {
-            const address: Address = {
-                id: Date.now(),
-                name: newAddress.name || "Nova",
-                street: newAddress.street || "",
-                district: newAddress.district || "",
-                city: newAddress.city || "",
-                zip: newAddress.zip || "",
-                isDefault: user.addresses.length === 0
-            };
-            setUser(prev => ({ ...prev, addresses: [...prev.addresses, address] }));
+    const handleAddAddress = async () => {
+        const address: Address = {
+            id: Date.now(),
+            name: newAddress.name || "Nova",
+            street: newAddress.street || "",
+            number: newAddress.number || "",
+            district: newAddress.district || "",
+            city: newAddress.city || "",
+            state: newAddress.state || "",
+            zip: newAddress.zip || "",
+            isDefault: user.addresses.length === 0
+        };
+        const updatedAddresses = [...user.addresses, address];
+        setUser(prev => ({ ...prev, addresses: updatedAddresses }));
+
+        try {
+            // Persistir no banco imediatamente
+            await supabase.from('arena_profiles').update({ address: updatedAddresses }).eq('id', authUser.id);
             setNewAddress({});
             setIsAddingAddress(false);
+        } catch (e) {
+            console.error("Erro ao salvar endereço:", e);
         }
     };
 
-    const handleSetDefaultAddress = (id: number) => {
-        setUser(prev => ({
-            ...prev,
-            addresses: prev.addresses.map(addr => ({ ...addr, isDefault: addr.id === id }))
-        }));
+    const handleSetDefaultAddress = async (id: number) => {
+        const updatedAddresses = user.addresses.map(addr => ({ ...addr, isDefault: addr.id === id }));
+        setUser(prev => ({ ...prev, addresses: updatedAddresses }));
+        await supabase.from('arena_profiles').update({ address: updatedAddresses }).eq('id', authUser.id);
     };
 
-    const handleRemoveAddress = (id: number) => {
-        setUser(prev => ({
-            ...prev,
-            addresses: prev.addresses.filter(addr => addr.id !== id)
-        }));
+    const handleRemoveAddress = async (id: number) => {
+        const updatedAddresses = user.addresses.filter(addr => addr.id !== id);
+        setUser(prev => ({ ...prev, addresses: updatedAddresses }));
+        await supabase.from('arena_profiles').update({ address: updatedAddresses }).eq('id', authUser.id);
     };
 
     return (
@@ -210,15 +233,27 @@ const Profile: React.FC<ProfileProps> = ({ user: authUser, orders, initialTab = 
                                 )}
                             </section>
                             <div className="grid md:grid-cols-2 gap-6">
-                                <div onClick={() => setActiveTab('DATA')} className="bg-white/5 p-6 rounded-xl border border-white/10 cursor-pointer hover:border-primary/50 transition-colors">
-                                    <span className="material-symbols-outlined text-3xl text-primary mb-4">person</span>
+                                <div onClick={() => setActiveTab('DATA')} className="bg-white/5 p-6 rounded-xl border border-white/10 cursor-pointer hover:border-primary/50 transition-colors group">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <span className="material-symbols-outlined text-3xl text-primary">person</span>
+                                        <span className="material-symbols-outlined text-white/20 group-hover:text-primary transition-colors">arrow_forward</span>
+                                    </div>
                                     <h3 className="font-bold text-lg">Meus Dados</h3>
-                                    <p className="text-white/60 text-sm mt-1">Gerencie suas informações pessoais.</p>
+                                    <div className="mt-2 space-y-1">
+                                        <p className="text-white/40 text-xs font-bold uppercase tracking-widest">WhatsApp</p>
+                                        <p className="text-white/80 font-mono text-sm">{user.phone || 'Não informado'}</p>
+                                    </div>
                                 </div>
-                                <div onClick={() => setActiveTab('ADDRESSES')} className="bg-white/5 p-6 rounded-xl border border-white/10 cursor-pointer hover:border-primary/50 transition-colors">
-                                    <span className="material-symbols-outlined text-3xl text-primary mb-4">location_on</span>
+                                <div onClick={() => setActiveTab('ADDRESSES')} className="bg-white/5 p-6 rounded-xl border border-white/10 cursor-pointer hover:border-primary/50 transition-colors group">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <span className="material-symbols-outlined text-3xl text-primary">location_on</span>
+                                        <span className="material-symbols-outlined text-white/20 group-hover:text-primary transition-colors">arrow_forward</span>
+                                    </div>
                                     <h3 className="font-bold text-lg">Endereços</h3>
-                                    <p className="text-white/60 text-sm mt-1">Gerencie seus locais de entrega.</p>
+                                    <div className="mt-2 space-y-1">
+                                        <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Principal</p>
+                                        <p className="text-white/80 text-sm truncate">{user.addresses.find(a => a.isDefault)?.street || 'Nenhum cadastrado'}</p>
+                                    </div>
                                 </div>
                             </div>
                         </>
@@ -306,12 +341,14 @@ const Profile: React.FC<ProfileProps> = ({ user: authUser, orders, initialTab = 
                             {isAddingAddress && (
                                 <div className="bg-white/5 border border-white/10 p-6 rounded-xl animate-fade-in">
                                     <h3 className="font-bold mb-4">Novo Endereço</h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                                         <input placeholder="Nome (ex: Casa)" className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.name || ''} onChange={e => setNewAddress({ ...newAddress, name: e.target.value })} />
                                         <input placeholder="CEP" className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.zip || ''} onChange={e => setNewAddress({ ...newAddress, zip: e.target.value })} />
-                                        <input placeholder="Endereço" className="md:col-span-2 bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.street || ''} onChange={e => setNewAddress({ ...newAddress, street: e.target.value })} />
+                                        <input placeholder="Nº da Residência" className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.number || ''} onChange={e => setNewAddress({ ...newAddress, number: e.target.value })} />
+                                        <input placeholder="Endereço" className="md:col-span-3 bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.street || ''} onChange={e => setNewAddress({ ...newAddress, street: e.target.value })} />
                                         <input placeholder="Bairro" className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.district || ''} onChange={e => setNewAddress({ ...newAddress, district: e.target.value })} />
-                                        <input placeholder="Cidade/UF" className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.city || ''} onChange={e => setNewAddress({ ...newAddress, city: e.target.value })} />
+                                        <input placeholder="Cidade" className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.city || ''} onChange={e => setNewAddress({ ...newAddress, city: e.target.value })} />
+                                        <input placeholder="Estado (UF)" className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white outline-none focus:border-primary" value={newAddress.state || ''} onChange={e => setNewAddress({ ...newAddress, state: e.target.value })} />
                                     </div>
                                     <div className="flex justify-end gap-2">
                                         <button onClick={() => setIsAddingAddress(false)} className="text-white/60 font-bold text-sm px-4">Cancelar</button>
@@ -325,9 +362,9 @@ const Profile: React.FC<ProfileProps> = ({ user: authUser, orders, initialTab = 
                                     <div key={addr.id} className={`p-6 rounded-xl border relative group ${addr.isDefault ? 'border-primary bg-primary/5' : 'border-white/10 bg-white/5'}`}>
                                         {addr.isDefault && <span className="absolute top-4 right-4 text-[10px] font-bold uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded">Principal</span>}
                                         <h3 className="font-bold text-lg mb-2">{addr.name}</h3>
-                                        <p className="text-white/60 text-sm">{addr.street}</p>
-                                        <p className="text-white/60 text-sm">{addr.district} - {addr.city}</p>
-                                        <p className="text-white/60 text-sm">{addr.zip}</p>
+                                        <p className="text-white/60 text-sm">{addr.street}{addr.number ? `, ${addr.number}` : ''}</p>
+                                        <p className="text-white/60 text-sm">{addr.district} - {addr.city}/{addr.state}</p>
+                                        <p className="text-white/60 text-sm">CEP: {addr.zip}</p>
 
                                         <div className="flex gap-4 mt-6 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button className="text-white hover:text-primary text-xs font-bold uppercase">Editar</button>
