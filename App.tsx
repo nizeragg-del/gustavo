@@ -95,8 +95,24 @@ const App: React.FC = () => {
   };
 
   // Admin Actions
-  const handleAddProduct = (newProduct: Product) => {
-    setProducts(prev => [newProduct, ...prev]);
+  const handleAddProduct = async (newProduct: Product) => {
+    try {
+      const { data, error } = await supabase.from('products').insert({
+        name: newProduct.name,
+        brand: newProduct.brand,
+        price: newProduct.price,
+        image_url: newProduct.image,
+        category_id: 1, // Default to first category for now
+        is_new: true,
+        stock_quantity: 100
+      }).select().single();
+
+      if (error) throw error;
+      fetchData(); // Refresh list
+    } catch (error) {
+      console.error('Error adding product:', error);
+      alert('Erro ao salvar produto no banco.');
+    }
   };
 
   const handleUpdateOrderStatus = (orderId: string, status: any) => {

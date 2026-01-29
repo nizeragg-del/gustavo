@@ -53,7 +53,19 @@ const Admin: React.FC<AdminProps> = ({ products = [], orders = [], onAddProduct,
 
     const handleSubmitProduct = (e: React.FormEvent) => {
         e.preventDefault();
-        // ... handled in parent for now or could implement direct Supabase insert here
+        if (onAddProduct && newProduct.name && newProduct.price && newProduct.image) {
+            onAddProduct({
+                id: Date.now(),
+                name: newProduct.name,
+                brand: newProduct.brand || "Genérica",
+                price: Number(newProduct.price),
+                image: newProduct.image,
+                category: newProduct.category || "Clubes",
+                isNew: true
+            });
+            setActiveTab('PRODUCTS');
+            setNewProduct({ category: 'Clubes', subcategory: 'Nacional' }); // Reset
+        }
     };
 
     // --- DYNAMIC DATA FOR DASHBOARD ---
